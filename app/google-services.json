@@ -1,0 +1,92 @@
+{
+  "project_info": {
+    "project_number": "421455894843",
+    "project_id": "quanlychitieu-android",
+    "storage_bucket": "quanlychitieu-android.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421455894843:android:2bb25b12cacff9f7faff1e",
+        "android_client_info": {
+          "package_name": "com.example.quanlychitieu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421455894843-pmccv37ktcopbc2230k8rjsljj56c3mj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quanlychitieu",
+            "certificate_hash": "09e43117208e593084046d4b6986b784737a07fa"
+          }
+        },
+        {
+          "client_id": "421455894843-vvvpshbsusevcfocn43jlmj1619uvhga.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quanlychitieu",
+            "certificate_hash": "c07ef2c69fb76f427ab66f164070dce99ed276b5"
+          }
+        },
+        {
+          "client_id": "421455894843-e6m49anlu68s7mg3glcrr953it6t1cg4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTQXmIKzzQVuJraKdte6ORROBkU5ZHMp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421455894843-e6m49anlu68s7mg3glcrr953it6t1cg4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421455894843:android:eda23960b2b9c339faff1e",
+        "android_client_info": {
+          "package_name": "com.example.quanlythuchi_android_firestore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421455894843-56tf8kch2auv70pti7fk2e5vfrikcdie.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quanlythuchi_android_firestore",
+            "certificate_hash": "09e43117208e593084046d4b6986b784737a07fa"
+          }
+        },
+        {
+          "client_id": "421455894843-e6m49anlu68s7mg3glcrr953it6t1cg4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTQXmIKzzQVuJraKdte6ORROBkU5ZHMp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421455894843-e6m49anlu68s7mg3glcrr953it6t1cg4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
