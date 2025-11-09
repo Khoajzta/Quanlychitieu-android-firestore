@@ -379,17 +379,17 @@ fun AddThuNhapPage(
                 icon = Icons.Default.AddCircle,
                 onClick = {
                     if(tenThuNhap != "" && sotien != 0L && selectedDate != null ){
-                        var thuNhap = ThuNhapModel(
-                            id = 0,
-                            id_nguoidung = userId,
-                            id_taikhoan = taikhoanchinh.id,
-                            so_tien = sotien,
-                            ngay_tao = formatMillisToDB(selectedDate),
-                            ghi_chu = tenThuNhap
-                        )
-
-
-                        thuNhapViewModel.createThuNhap(thuNhap)
+//                        var thuNhap = ThuNhapModel(
+//                            id = 0,
+//                            id_nguoidung = userId,
+//                            id_taikhoan = taikhoanchinh.id,
+//                            so_tien = sotien,
+//                            ngay_tao = formatMillisToDB(selectedDate),
+//                            ghi_chu = tenThuNhap
+//                        )
+//
+//
+//                        thuNhapViewModel.createThuNhap(thuNhap)
 
                         snackbarType = SnackbarType.SUCCESS
                         snackbarMessage = "Thêm thu nhập thành công"

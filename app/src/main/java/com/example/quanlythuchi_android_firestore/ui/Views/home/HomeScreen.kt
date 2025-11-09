@@ -66,6 +66,7 @@ import com.example.quanlythuchi_android_firestore.data.local.Notification.Notifi
 import com.example.quanlythuchi_android_firestore.domain.model.ChiTieuModel
 import com.example.quanlythuchi_android_firestore.domain.model.KhoanChiModel
 import com.example.quanlythuchi_android_firestore.domain.model.ThongKeChiTieuModel
+import com.example.quanlythuchi_android_firestore.domain.model.ThuNhapModel
 import com.example.quanlythuchi_android_firestore.ui.ViewModels.ChiTieuViewModel
 import com.example.quanlythuchi_android_firestore.ui.ViewModels.NguoiDungViewModel
 import com.example.quanlythuchi_android_firestore.ui.ViewModels.TaiKhoanViewModel
@@ -351,26 +352,28 @@ fun HomeScreen(
     userId: Int,
     chiTieuViewModel: ChiTieuViewModel = hiltViewModel(),
     khoanChiViewModel: KhoanChiViewModel = hiltViewModel(),
+    thuNhapViewModel: ThuNhapViewModel = hiltViewModel()
 ){
 
     LaunchedEffect(Unit) {
-        khoanChiViewModel.getAllKhoanChiByUser("23")
+        thuNhapViewModel.getThuNhapTheoThangVaNam("23", 11, 2025)
+        thuNhapViewModel.thongKeTheoNam("23",2025)
     }
 
-    val khoanChiState by khoanChiViewModel.getAllByUserState.collectAsState()
+    val thunhapstate by thuNhapViewModel.getByThangVaNamState.collectAsState()
+    val thunhap by thuNhapViewModel.thongKeTheoNamState.collectAsState()
 
-    when(val state = khoanChiState) {
+    when(val statethunhap = thunhapstate) {
         is UiState.Success -> {
-            Log.d("HomeScreen", "KhoanChi: ${state.data}")
+            Log.d("HomeScreen", "thu nhạp: ${statethunhap.data}")
         }
         is UiState.Error -> {
-            Log.d("HomeScreen", "Error: ${state.message}")
+            Log.d("HomeScreen", "Error: ${statethunhap.message}")
         }
         else -> {
             DotLoading()
         }
     }
-
 
     Scaffold(
 
@@ -384,17 +387,16 @@ fun HomeScreen(
 
             Button(
                 onClick = {
-                    val testKhoanChi = KhoanChiModel(
-                        ten_khoanchi = "Ăn uống",
+                    val thunhap = ThuNhapModel(
+                        id = "123",
                         id_nguoidung = "23",
-                        so_tien_du_kien = 100000,
-                        ngay_batdau = "2025-11-01",
-                        ngay_ketthuc = "2025-11-30",
-                        mausac = "#FF5733",
-                        emoji = "🍔",
+                        id_taikhoan = "123",
+                        so_tien = 20000000,
+                        ngay_tao = "2025-11-01",
+                        ghi_chu = "Thu nhập"
                     )
 
-                    khoanChiViewModel.createKhoanChi(testKhoanChi)
+                    thuNhapViewModel.createThuNhap(thunhap)
                 }
             ) {
                 Text("Thêm")
@@ -423,7 +425,7 @@ fun HomeScreen(
 
             Button(
                 onClick = {
-                    khoanChiViewModel.deleteKhoanChi(id_khoanchi = "vbVgfJ3kyU1gbwTEXLQi")
+                    thuNhapViewModel.deleteThuNhap(id = "byjUwk2dCzBqqwE9WDVw")
                 }
             ) {
                 Text("Xóa")

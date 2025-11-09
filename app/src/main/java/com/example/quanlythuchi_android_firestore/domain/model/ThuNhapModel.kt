@@ -1,10 +1,10 @@
 package com.example.quanlythuchi_android_firestore.domain.model
 
 data class ThuNhapModel(
-    val id: Int,
-    val id_nguoidung: Int,
-    val id_taikhoan: Int,
-    val so_tien: Long,
-    val ngay_tao: String,
-    val ghi_chu: String,
+    val id: String? = null,
+    val id_nguoidung: String? = null,
+    val id_taikhoan: String? = null,
+    val ngay_tao: String? = null,
+    val so_tien: Long ?= null,
+    val ghi_chu: String? = null
 )

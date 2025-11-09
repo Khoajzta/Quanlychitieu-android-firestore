@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,101 +25,88 @@ class ThuNhapViewModel @Inject constructor(
     private val repository: ThuNhapRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<List<ThuNhapModel>>>(UiState.Loading)
-    val uiState: StateFlow<UiState<List<ThuNhapModel>>> = _uiState
+    val ngaytruoc = LocalDate.now().minusMonths(1)
 
-    private val _uiStateTheoThangTruoc = MutableStateFlow<UiState<List<ThuNhapModel>>>(UiState.Loading)
-    val uiStateTheoThangTruoc: StateFlow<UiState<List<ThuNhapModel>>> = _uiStateTheoThangTruoc
+    private val _getByThangVaNamState = MutableStateFlow<UiState<List<ThuNhapModel>>>(UiState.Loading)
+    val getByThangVaNamState: StateFlow<UiState<List<ThuNhapModel>>> = _getByThangVaNamState
+
+    private val _getByThangTruocState = MutableStateFlow<UiState<List<ThuNhapModel>>>(UiState.Loading)
+    val getByThangTruocState: StateFlow<UiState<List<ThuNhapModel>>> = _getByThangTruocState
 
 
-    private val _thongKeTheoNamuiState = MutableStateFlow<UiState<List<ThongKeThuNhapModel>>>(UiState.Loading)
-    val thongKeTheoNamState: StateFlow<UiState<List<ThongKeThuNhapModel>>> = _thongKeTheoNamuiState
-    var thuNhapCreateState by mutableStateOf<UiState<BaseResponse<ThuNhapModel>>>(UiState.Loading)
-        private set
+    private val _thongKeTheoNamState = MutableStateFlow<UiState<List<ThongKeThuNhapModel>>>(UiState.Loading)
+    val thongKeTheoNamState: StateFlow<UiState<List<ThongKeThuNhapModel>>> = _thongKeTheoNamState
+    private val _createState = MutableStateFlow<UiState<StatusResponse>>(UiState.Loading)
+    val createState: StateFlow<UiState<StatusResponse>> = _createState
 
-    var deleteThuNhapState by mutableStateOf<UiState<StatusResponse>>(UiState.Loading)
-        private set
+    private val _deleteState = MutableStateFlow<UiState<StatusResponse>>(UiState.Loading)
+    val deleteState: StateFlow<UiState<StatusResponse>> = _deleteState
 
-    fun getThuNhapTheoThang(userId: Int, thang: Int, nam: Int) {
+    fun getThuNhapTheoThangVaNam(userId: String, thang: Int, nam: Int) {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            _getByThangVaNamState.value = UiState.Loading
             try {
-                val result = repository.getThuNhapTheoThang(userId, thang, nam)
-                if (result.success) {
-                    _uiState.value = UiState.Success(result.data!!)
-                    Log.d("THU_NHAP_VIEWMODEL", "Dữ liệu nhận được: ${result.data}")
-                } else {
-                    _uiState.value = UiState.Error(result.message ?: "Lỗi không xác định")
-                    Log.e("THU_NHAP_VIEWMODEL", "Lỗi từ API: ${result.message}")
-                }
+                val result = repository.getThuNhapTheoThangVaNam(userId,thang,nam)
+                _getByThangVaNamState.value = UiState.Success(result)
             } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.message ?: "Lỗi kết nối")
-                Log.e("THU_NHAP_VIEWMODEL", "Exception: ${e.message}")
+                _getByThangVaNamState.value = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
             }
         }
     }
 
-    fun getThuNhapTheoThangTruoc(userId: Int, thang: Int, nam: Int) {
+    fun getThuNhapTheoThangTruoc(userId: String) {
         viewModelScope.launch {
-            _uiStateTheoThangTruoc.value = UiState.Loading
+            _getByThangTruocState.value = UiState.Loading
             try {
-                val result = repository.getThuNhapTheoThang(userId, thang, nam)
-                if (result.success) {
-                    _uiStateTheoThangTruoc.value = UiState.Success(result.data!!)
-                    Log.d("THU_NHAP_VIEWMODEL", "Dữ liệu nhận được: ${result.data}")
-                } else {
-                    _uiStateTheoThangTruoc.value = UiState.Error(result.message ?: "Lỗi không xác định")
-                    Log.e("THU_NHAP_VIEWMODEL", "Lỗi từ API: ${result.message}")
-                }
+                val result = repository.getThuNhapTheoThangVaNam(userId,ngaytruoc.monthValue,ngaytruoc.year)
+                _getByThangTruocState.value = UiState.Success(result)
             } catch (e: Exception) {
-                _uiStateTheoThangTruoc.value = UiState.Error(e.message ?: "Lỗi kết nối")
-                Log.e("THU_NHAP_VIEWMODEL", "Exception: ${e.message}")
+                _getByThangTruocState.value = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
             }
         }
     }
 
-    fun thongKeTheoNam(userId: Int, nam: Int) {
+    fun thongKeTheoNam(userId: String, nam: Int) {
         viewModelScope.launch {
-            _thongKeTheoNamuiState.value = UiState.Loading
+            _thongKeTheoNamState.value = UiState.Loading
             try {
                 val result = repository.thongkeTheoNam(userId, nam)
-                if (result.success) {
-                    _thongKeTheoNamuiState.value = UiState.Success(result.data!!)
-                    Log.d("THU_NHAP_VIEWMODEL", "Dữ liệu nhận được: ${result.data}")
-                } else {
-                    _thongKeTheoNamuiState.value = UiState.Error(result.message ?: "Lỗi không xác định")
-                    Log.e("THU_NHAP_VIEWMODEL", "Lỗi từ API: ${result.message}")
-                }
-            } catch (e: Exception) {
-                _thongKeTheoNamuiState.value = UiState.Error(e.message ?: "Lỗi kết nối")
-                Log.e("THU_NHAP_VIEWMODEL", "Exception: ${e.message}")
+                _thongKeTheoNamState.value = UiState.Success(result)
+
+            } catch (e:Exception) {
+                _thongKeTheoNamState.value =
+                    UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
             }
         }
     }
     fun createThuNhap(thunhap: ThuNhapModel) {
         viewModelScope.launch {
-            thuNhapCreateState = UiState.Loading
+            _createState.value = UiState.Loading
             try {
-                val result = repository.createThuNhap(thunhap)
-                thuNhapCreateState = UiState.Success(result)
+                val response = repository.createThuNhap(thunhap)
+                if (response.success) {
+                    _createState.value = UiState.Success(response)
+                } else {
+                    _createState.value = UiState.Error(response.message ?: "Không thể tạo chi tiêu")
+                }
             } catch (e: Exception) {
-                thuNhapCreateState = UiState.Error(e.message ?: "Unknown error")
+                _createState.value = UiState.Error(e.message ?: "Lỗi không xác định")
             }
         }
     }
 
-    fun deleteThuNhap(id: Int) {
+    fun deleteThuNhap(id: String) {
         viewModelScope.launch {
-            deleteThuNhapState = UiState.Loading
+            _deleteState.value = UiState.Loading
             try {
                 val result = repository.deleteThuNhap(id)
                 if (result.success) {
-                    deleteThuNhapState = UiState.Success(result)
+                    _deleteState.value = UiState.Success(result)
                 } else {
-                    deleteThuNhapState = UiState.Error(result.message)
+                    _deleteState.value = UiState.Error(result.message)
                 }
             } catch (e: Exception) {
-                deleteThuNhapState = UiState.Error(e.message ?: "Lỗi không xác định")
+                _deleteState.value = UiState.Error(e.message ?: "Lỗi không xác định")
             }
         }
     }

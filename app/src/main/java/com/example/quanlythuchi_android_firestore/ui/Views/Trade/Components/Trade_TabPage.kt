@@ -194,9 +194,9 @@ fun ThuNhapPage(
     userId: Int,
     thuNhapViewModel: ThuNhapViewModel = hiltViewModel()
 ) {
-    val thuNhapState by thuNhapViewModel.uiState.collectAsState()
+    val thuNhapState by thuNhapViewModel.getByThangVaNamState.collectAsState()
 
-    val deleteThuNhapState = thuNhapViewModel.deleteThuNhapState
+    val deleteThuNhapState by thuNhapViewModel.deleteState.collectAsState()
 
     val currentDate = LocalDate.now()
     val currentMonth = currentDate.monthValue
@@ -208,16 +208,16 @@ fun ThuNhapPage(
 
     // Tải danh sách thu nhập ban đầu
     LaunchedEffect(userId) {
-        thuNhapViewModel.getThuNhapTheoThang(
-            userId = userId, thang = currentMonth, nam = currentYear
+        thuNhapViewModel.getThuNhapTheoThangVaNam(
+            userId = userId.toString(), thang = currentMonth, nam = currentYear
         )
     }
 
     // Khi xóa thành công -> load lại danh sách
     LaunchedEffect(deleteThuNhapState) {
         if (deleteThuNhapState is UiState.Success) {
-            thuNhapViewModel.getThuNhapTheoThang(
-                userId = userId, thang = currentMonth, nam = currentYear
+            thuNhapViewModel.getThuNhapTheoThangVaNam(
+                userId = userId.toString(), thang = currentMonth, nam = currentYear
             )
 
             snackbarType = SnackbarType.SUCCESS
@@ -251,11 +251,11 @@ fun ThuNhapPage(
                         verticalArrangement = Arrangement.spacedBy(SpaceMedium),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(listThuNhap, key = { it.id }) { item ->
+                        items(listThuNhap, key = { it.id!! }) { item ->
                             CardThuNhapSwipeToDelete(
                                 thuNhap = item,
                                 onDelete = { thuNhap ->
-                                    thuNhapViewModel.deleteThuNhap(thuNhap.id)
+                                    thuNhapViewModel.deleteThuNhap(thuNhap.id!!)
                                 }
                             )
                         }

@@ -80,7 +80,7 @@ fun CardThuNhap(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Ngày: ${formatDayDisplay(thuNhap.ngay_tao)}",
+                    text = "Ngày: ${formatDayDisplay(thuNhap.ngay_tao!!)}",
                     fontSize = 16.sp,
                     color = Color.White.copy(alpha = 0.85f),
                 )
@@ -97,7 +97,7 @@ fun CardThuNhap(
 
             ) {
                 Text(
-                    text = "💵 ${formatCurrency(thuNhap.so_tien)}",
+                    text = "💵 ${formatCurrency(thuNhap.so_tien!!)}",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF057968)
@@ -175,9 +175,9 @@ fun CardThuNhapSwipeToDelete(
 fun CardThuNhapPreview() {
     CardThuNhap(
         thuNhap = ThuNhapModel(
-            id = 1,
-            id_nguoidung = 21,
-            id_taikhoan = 1,
+            id = "1",
+            id_nguoidung = "21",
+            id_taikhoan = "1",
             so_tien = 1000000,
             ngay_tao = "2025-09-15",
             ghi_chu = "Tiền lương"

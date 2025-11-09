@@ -46,10 +46,10 @@ fun ListThuNhapTheoThangScreen(
     val currentMonth = currentDate.monthValue
     val currentYear = currentDate.year
 
-    val thunhapListState by thuNhapViewModel.uiState.collectAsState()
+    val thunhapListState by thuNhapViewModel.getByThangVaNamState.collectAsState()
 
     LaunchedEffect(userId) {
-        thuNhapViewModel.getThuNhapTheoThang(userId,currentMonth,currentYear)
+        thuNhapViewModel.getThuNhapTheoThangVaNam(userId.toString(),currentMonth,currentYear)
     }
 
     val thuNhapList = when(thunhapListState){
@@ -94,7 +94,7 @@ fun ListThuNhapTheoThangScreen(
                                 CardThuNhapSwipeToDelete(
                                     thuNhap = thunhap,
                                     onDelete = { thuNhap ->
-                                        thuNhapViewModel.deleteThuNhap(thuNhap.id)
+                                        thuNhapViewModel.deleteThuNhap(thuNhap.id!!)
                                     }
                                 )
                             }

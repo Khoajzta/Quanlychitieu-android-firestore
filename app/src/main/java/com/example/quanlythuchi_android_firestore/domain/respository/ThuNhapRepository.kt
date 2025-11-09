@@ -7,8 +7,8 @@ import com.example.quanlythuchi_android_firestore.domain.model.ThongKeThuNhapMod
 import com.example.quanlythuchi_android_firestore.domain.model.ThuNhapModel
 
 interface ThuNhapRepository {
-    suspend fun getThuNhapTheoThang(userId:Int, thang:Int, nam:Int) : BaseResponseMes<List<ThuNhapModel>>
-    suspend fun thongkeTheoNam(userId:Int, nam:Int) : BaseResponseMes<List<ThongKeThuNhapModel>>
-    suspend fun createThuNhap(thuNhapModel: ThuNhapModel): BaseResponse<ThuNhapModel>
-    suspend fun deleteThuNhap(id:Int):StatusResponse
+    suspend fun getThuNhapTheoThangVaNam(userId: String, thang:Int, nam:Int) : List<ThuNhapModel>
+    suspend fun thongkeTheoNam(userId: String, nam:Int) : List<ThongKeThuNhapModel>
+    suspend fun createThuNhap(thuNhapModel: ThuNhapModel): StatusResponse
+    suspend fun deleteThuNhap(id: String):StatusResponse
 }

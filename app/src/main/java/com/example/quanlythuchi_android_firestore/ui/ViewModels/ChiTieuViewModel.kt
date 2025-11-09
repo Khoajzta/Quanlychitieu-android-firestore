@@ -17,18 +17,20 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class ChiTieuViewModel @Inject constructor(
     private val repository: ChiTieuRepository
 ) : ViewModel() {
+    val ngaytruoc = LocalDate.now().minusMonths(1)
 
     private val _uiState = MutableStateFlow<UiState<List<ChiTieuModel>>>(UiState.Loading)
     val uiState: StateFlow<UiState<List<ChiTieuModel>>> = _uiState
 
-    private val _thangVaNamuiState = MutableStateFlow<UiState<List<ChiTieuModel>>>(UiState.Loading)
-    val thangVaNam: StateFlow<UiState<List<ChiTieuModel>>> = _thangVaNamuiState
+    private val _getByThangVaNamiState = MutableStateFlow<UiState<List<ChiTieuModel>>>(UiState.Loading)
+    val getByThangVaNam: StateFlow<UiState<List<ChiTieuModel>>> = _getByThangVaNamiState
 
     private val _thongKeState = MutableStateFlow<UiState<List<ThongKeChiTieuModel>>>(UiState.Loading)
     val thongKeState: StateFlow<UiState<List<ThongKeChiTieuModel>>> = _thongKeState
@@ -123,25 +125,35 @@ class ChiTieuViewModel @Inject constructor(
     // 🔵 Lấy chi tiêu theo tháng và năm
     fun getChiTieuTheoThangVaNam(userId: String, thang: Int, nam: Int) {
         viewModelScope.launch {
-            _thangVaNamuiState.value = UiState.Loading
+            _getByThangVaNamiState.value = UiState.Loading
             try {
                 val response = repository.getChiTieuTheoThangVaNam(userId, thang, nam)
                 if (response.isNotEmpty()) {
-                    _thangVaNamuiState.value = UiState.Success(response)
+                    _getByThangVaNamiState.value = UiState.Success(response)
                 } else {
-                    _thangVaNamuiState.value = UiState.Success(emptyList()) // để không crash
+                    _getByThangVaNamiState.value = UiState.Success(emptyList()) // để không crash
                 }
             } catch (e: Exception) {
-                Log.e("ChiTieuViewModel", "Lỗi getChiTieuTheoThangVaNam: ${e.message}", e)
-                _thangVaNamuiState.value = UiState.Error(e.message ?: "Lỗi không xác định")
+                _getByThangVaNamiState.value = UiState.Error(e.message ?: "Lỗi không xác định")
             }
         }
     }
 
-
-
-
-
+    fun getChiTieuTheoThangTruoc(userId: String) {
+        viewModelScope.launch {
+            _getByThangVaNamiState.value = UiState.Loading
+            try {
+                val response = repository.getChiTieuTheoThangVaNam(userId, ngaytruoc.monthValue, ngaytruoc.year)
+                if (response.isNotEmpty()) {
+                    _getByThangVaNamiState.value = UiState.Success(response)
+                } else {
+                    _getByThangVaNamiState.value = UiState.Success(emptyList()) // để không crash
+                }
+            } catch (e: Exception) {
+                _getByThangVaNamiState.value = UiState.Error(e.message ?: "Lỗi không xác định")
+            }
+        }
+    }
 
     // 🟣 Thống kê theo năm
     fun thongKeTheoNam(userId: String, nam: Int) {
