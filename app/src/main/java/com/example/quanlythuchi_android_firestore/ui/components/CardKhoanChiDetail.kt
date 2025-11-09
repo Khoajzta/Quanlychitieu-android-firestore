@@ -67,10 +67,10 @@ fun CardKhoanChiDetail(
     var expanded by remember { mutableStateOf(false) }
 
     val spentPercentage = remember(item.so_tien_du_kien, item.tong_tien_da_chi) {
-        (item.tong_tien_da_chi.toFloat() / item.so_tien_du_kien.toFloat()).coerceIn(0f, 1f)
+        (item.tong_tien_da_chi.toFloat() / item.so_tien_du_kien!!.toFloat()).coerceIn(0f, 1f)
     }
 
-    val isOverLimit = item.tong_tien_da_chi > item.so_tien_du_kien
+    val isOverLimit = item.tong_tien_da_chi > item.so_tien_du_kien!!
 
     val backgroundGradientColors = when {
         isOverLimit -> listOf( // ⚠️ nền cảnh báo đỏ
@@ -180,7 +180,7 @@ fun CardKhoanChiDetail(
                         .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Text(
-                        text = formatDayDisplay(item.ngay_batdau),
+                        text = formatDayDisplay(item.ngay_batdau!!),
                         fontSize = 14.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Medium
@@ -203,7 +203,7 @@ fun CardKhoanChiDetail(
                         .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Text(
-                        text = formatDayDisplay(item.ngay_ketthuc),
+                        text = formatDayDisplay(item.ngay_ketthuc!!),
                         fontSize = 14.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Medium
@@ -273,9 +273,9 @@ fun CardKhoanChiDetailPreview(){
     CardKhoanChiDetail(
         modifier = Modifier,
         KhoanChiModel(
-        id = 1,
+        id = "1",
         ten_khoanchi = "Tiền ăn",
-        id_nguoidung = 1,
+        id_nguoidung = 1.toString(),
         mausac = "red",
         ngay_batdau = "2025-02-16",
         ngay_ketthuc = "2025-03-16",

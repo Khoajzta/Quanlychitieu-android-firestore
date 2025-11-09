@@ -81,11 +81,11 @@ fun CardChiTieu(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = "Ngày: ${formatDayDisplay(chitieu.ngay_tao)}",
-                    fontSize = 14.sp,
-                    color = Color.White.copy(alpha = 0.85f),
-                )
+//                Text(
+//                    text = "Ngày: ${formatDayDisplay(chitieu.ngay_tao)}",
+//                    fontSize = 14.sp,
+//                    color = Color.White.copy(alpha = 0.85f),
+//                )
             }
 
 
@@ -98,12 +98,12 @@ fun CardChiTieu(
                     .padding(horizontal = 12.dp, vertical = 6.dp)
 
             ) {
-                Text(
-                    text = "💵 ${formatCurrency(chitieu.so_tien)}",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
+//                Text(
+//                    text = "💵 ${formatCurrency(chitieu.so_tien)}",
+//                    fontSize = 22.sp,
+//                    fontWeight = FontWeight.Bold,
+//                    color = Color.White
+//                )
             }
 
         }
@@ -173,15 +173,15 @@ fun CardChiTieuSwipeToDelete(
 @Composable
 @Preview
 fun CardChiTieuPreview(){
-    var chitieu = ChiTieuModel(
-        id = 1,
-        id_nguoidung = 1,
-        id_khoanchi = 1,
-        id_taikhoan = 1,
-        so_tien = 20000,
-        ngay_tao = "12-09-2025",
-        ghi_chu = "ăn sáng"
-    )
-
-    CardChiTieu(modifier = Modifier,chitieu)
+//    var chitieu = ChiTieuModel(
+//        id = 1,
+//        id_nguoidung = 1,
+//        id_khoanchi = 1,
+//        id_taikhoan = 1,
+//        so_tien = 20000,
+//        ngay_tao = "12-09-2025",
+//        ghi_chu = "ăn sáng"
+//    )
+//
+//    CardChiTieu(modifier = Modifier,chitieu)
 }

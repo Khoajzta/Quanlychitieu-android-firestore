@@ -29,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +46,6 @@ import androidx.emoji2.text.EmojiCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.Quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components.ColorPickerRow
 import com.example.quanlythuchi_android_firestore.Components.CusTomTextField
 import com.example.quanlythuchi_android_firestore.Components.CustomButton
 import com.example.quanlythuchi_android_firestore.Components.CustomDatePicker
@@ -53,8 +53,9 @@ import com.example.quanlythuchi_android_firestore.Components.EmojiPickerGrid
 import com.example.quanlythuchi_android_firestore.Utils.formatMillisToDB
 import com.example.quanlythuchi_android_firestore.ViewModels.KhoanChiViewModel
 import com.example.quanlythuchi_android_firestore.domain.model.KhoanChiModel
-import com.example.Quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components.EmojiRow
 import com.example.quanlythuchi_android_firestore.Utils.formatCurrency
+import com.example.quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components.ColorPickerRow
+import com.example.quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components.EmojiRow
 import com.example.quanlythuchi_android_firestore.ui.components.CustomSnackbar
 import com.example.quanlythuchi_android_firestore.ui.components.EmojiPickerBottomSheet
 import com.example.quanlythuchi_android_firestore.ui.components.Header
@@ -86,7 +87,7 @@ fun AddKhoanChiScreen(
     var snackbarType by remember { mutableStateOf(SnackbarType.SUCCESS) }
     var snackbarMessage by remember { mutableStateOf("") }
 
-    val createKhoanChiUiState = khoanchiViewModel.createKhoanChiState
+    val createKhoanChiUiState by khoanchiViewModel.createState.collectAsState()
     val colorOptions = listOf("red", "blue", "green", "yellow")
 
     // ✅ Lấy tháng hiện tại
@@ -199,17 +200,17 @@ fun AddKhoanChiScreen(
                     icon = Icons.Default.AddCircle,
                     onClick = {
                         if (tenKhoanChiInput.isNotBlank() && sotien > 0) {
-                            val khoanchinew = KhoanChiModel(
-                                id = 0,
-                                ten_khoanchi = tenKhoanChiInput,
-                                id_nguoidung = userId,
-                                mausac = selectedColor,
-                                ngay_batdau = formatMillisToDB(firstDayOfMonth),
-                                ngay_ketthuc = formatMillisToDB(lastDayOfMonth),
-                                so_tien_du_kien = sotien,
-                                emoji = emojiInput
-                            )
-                            khoanchiViewModel.createKhoanChi(khoanchinew)
+//                            val khoanchinew = KhoanChiModel(
+//                                id = 0,
+//                                ten_khoanchi = tenKhoanChiInput,
+//                                id_nguoidung = userId,
+//                                mausac = selectedColor,
+//                                ngay_batdau = formatMillisToDB(firstDayOfMonth),
+//                                ngay_ketthuc = formatMillisToDB(lastDayOfMonth),
+//                                so_tien_du_kien = sotien,
+//                                emoji = emojiInput
+//                            )
+//                            khoanchiViewModel.createKhoanChi(khoanchinew)
                         } else {
                             snackbarMessage = "Vui lòng nhập đầy đủ thông tin"
                             snackbarType = SnackbarType.ERROR
@@ -255,7 +256,7 @@ fun AddKhoanChiScreen(
 
                         delay(1000)
                         navController.popBackStack()
-                        khoanchiViewModel.resetCreateKhoanChiState()
+
                     }
 
                     is UiState.Error -> {
@@ -266,7 +267,6 @@ fun AddKhoanChiScreen(
 
                         delay(3000)
                         snackbarVisible = false
-                        khoanchiViewModel.resetCreateKhoanChiState()
                     }
 
                     else -> Unit

@@ -175,12 +175,14 @@ fun ChiTieuPage(
         verticalArrangement = Arrangement.spacedBy(SpaceMedium)
     ) {
         itemsIndexed(listKhoanChi) { index, item ->
-            CardKhoanChi(item, modifier = Modifier, onDetailClick = {navController.navigate(
-                Screen.KhoanChiDetail.createRoute(
-                    id_khoanChi = item.id,
-                    userId = userId
-                )
-            )})
+            CardKhoanChi(item, modifier = Modifier, onDetailClick = {
+//                navController.navigate(
+//                Screen.KhoanChiDetail.createRoute(
+//                    id_khoanChi = item.id,
+//                    userId = userId
+//                )
+//            )
+            })
         }
     }
 }

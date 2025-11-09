@@ -122,6 +122,10 @@ dependencies {
 
 // Compose permissions (hỗ trợ yêu cầu quyền)
     implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+
+    implementation("com.google.firebase:firebase-firestore-ktx:25.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

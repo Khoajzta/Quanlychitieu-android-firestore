@@ -11,6 +11,7 @@ import com.example.quanlythuchi_android_firestore.data.remote.NguoiDungAPIServic
 import com.example.quanlythuchi_android_firestore.data.remote.TaiKhoanAPIService
 import com.example.quanlythuchi_android_firestore.data.remote.ThuNhapAPIService
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,8 +67,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun proviceChiTieuApiService(retrofit: Retrofit): ChiTieuAPIService {
-        return retrofit.create(ChiTieuAPIService::class.java)
+    fun provideFirebaseFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
     }
 
     @Provides

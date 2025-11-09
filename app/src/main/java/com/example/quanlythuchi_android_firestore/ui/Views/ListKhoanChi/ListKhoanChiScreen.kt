@@ -59,12 +59,12 @@ fun ListKhoanChiScreen(
     val currentYear = currentDate.year
 
     val khoanChiuiState by khoanChiViewModel.loadtheothang.collectAsState()
-    val deleteState = khoanChiViewModel.deleteKhoanChiState
+    val deleteState by khoanChiViewModel.deleteState.collectAsState()
 
     LaunchedEffect(userId) {
         if (userId > 0) {
             while (true) {
-                khoanChiViewModel.loadKhoanChiTheoThang(userId, currentMonth, currentYear)
+                khoanChiViewModel.getKhoanChiTheThangVaNam(userId.toString(), currentMonth, currentYear)
                 delay(15 * 60 * 1000L)
             }
         }
@@ -92,7 +92,7 @@ fun ListKhoanChiScreen(
             confirmButtonColor = Color.Red,
             onConfirm = {
                 khoanChiToDelete?.let {
-                    khoanChiViewModel.deleteKhoanChi(it.id)
+//                    khoanChiViewModel.deleteKhoanChi(it.id)
                 }
                 khoanChiToDelete = null
             },
@@ -109,14 +109,12 @@ fun ListKhoanChiScreen(
                 snackbarMessage = "Xóa khoản chi thành công"
                 snackbarType = SnackbarType.SUCCESS
                 snackbarVisible = true
-                khoanChiViewModel.resetDeleteState()
             }
 
             is UiState.Error -> {
-                snackbarMessage = deleteState.message
+                snackbarMessage = "Lỗi khi xóa khoản chi"
                 snackbarType = SnackbarType.ERROR
                 snackbarVisible = true
-                khoanChiViewModel.resetDeleteState()
             }
 
             else -> Unit
@@ -156,20 +154,20 @@ fun ListKhoanChiScreen(
                                 item = khoanchi,
                                 modifier = Modifier,
                                 onDetailClick = {
-                                    navController.navigate(
-                                        Screen.KhoanChiDetail.createRoute(
-                                            id_khoanChi = khoanchi.id,
-                                            userId = userId
-                                        )
-                                    )
+//                                    navController.navigate(
+//                                        Screen.KhoanChiDetail.createRoute(
+//                                            id_khoanChi = khoanchi.id,
+//                                            userId = userId
+//                                        )
+//                                    )
                                 },
                                 onEdit = {
-                                    navController.navigate(
-                                        Screen.UpdateKhoanChi.createRoute(
-                                            userId,
-                                            id_khoanchi = khoanchi.id
-                                        )
-                                    )
+//                                    navController.navigate(
+//                                        Screen.UpdateKhoanChi.createRoute(
+//                                            userId,
+//                                            id_khoanchi = khoanchi.id
+//                                        )
+//                                    )
                                 },
                                 onDelete = {
                                     khoanChiToDelete = khoanchi
@@ -210,7 +208,7 @@ fun ListKhoanChiScreen(
             LaunchedEffect(snackbarVisible) {
                 if (snackbarVisible) {
                     if (userId > 0) {
-                        khoanChiViewModel.loadKhoanChi(userId)
+                        khoanChiViewModel.getAllKhoanChiByUser(userId.toString())
                     }
                     delay(3000)
                     snackbarVisible = false

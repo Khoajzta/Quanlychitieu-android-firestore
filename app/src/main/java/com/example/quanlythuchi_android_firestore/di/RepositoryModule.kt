@@ -9,7 +9,7 @@ import com.example.quanlythuchi_android_firestore.data.respository.NguoiDungRepo
 import com.example.quanlythuchi_android_firestore.data.respository.TaiKhoanRepositoryImpl
 import com.example.quanlythuchi_android_firestore.data.respository.ThuNhapRepositoryImpl
 import com.example.quanlythuchi_android_firestore.domain.respository.AuthRepository
-import com.example.quanlythuchi_android_firestore.domain.respository.ChiTieuRespository
+import com.example.quanlythuchi_android_firestore.domain.respository.ChiTieuRepository
 import com.example.quanlythuchi_android_firestore.domain.respository.ChuyenTienRepository
 import com.example.quanlythuchi_android_firestore.domain.respository.KhoanChiRepository
 import com.example.quanlythuchi_android_firestore.domain.respository.NguoiDungRepository
@@ -54,7 +54,7 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindChiTieuRepository(
         impl: ChiTieuRepositoryImpl
-    ): ChiTieuRespository
+    ): ChiTieuRepository
 
     @Binds
     @Singleton

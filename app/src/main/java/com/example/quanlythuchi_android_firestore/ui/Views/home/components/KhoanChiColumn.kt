@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.quanlythuchi_android_firestore.Components.CardKhoanChi
-import com.example.quanlythuchi_android_firestore.Utils.listKhoanChiConst.listKhoanChi
 import com.example.quanlythuchi_android_firestore.domain.model.KhoanChiModel
 
 
@@ -47,8 +46,6 @@ fun KhoanChiColumn(
 @Preview
 @Composable
 fun PreviewCardKhoanChi() {
-    KhoanChiColumn(
-        listKhoanChi,
-    )
+
 
 }

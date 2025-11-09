@@ -1,4 +1,4 @@
-package com.example.Quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components
+package com.example.quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

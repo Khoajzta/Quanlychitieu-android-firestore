@@ -205,7 +205,7 @@ fun AddChiTieuPage(
                     Text(selectedKhoanChi?.emoji ?: "", fontSize = 20.sp)
                 },
                 selectedItem = selectedKhoanChi,
-                itemLabel = { it.ten_khoanchi },
+                itemLabel = { it.ten_khoanchi!! },
                 onSelect = { selectedKhoanChi = it }
             )
 
@@ -248,16 +248,16 @@ fun AddChiTieuPage(
                     }
 
                     else if (sotien != 0L && selectedDate != null && selectedKhoanChi != null && mota.isNotBlank()) {
-                        val chiTieu = ChiTieuModel(
-                            id = 0,
-                            id_nguoidung = userId,
-                            id_khoanchi = selectedKhoanChi!!.id,
-                            id_taikhoan = taikhoanchinh.id,
-                            so_tien = sotien,
-                            ngay_tao = formatMillisToDB(selectedDate),
-                            ghi_chu = mota
-                        )
-                        chiTieuViewModel.createChiTieu(chiTieu)
+//                        val chiTieu = ChiTieuModel(
+//                            id = 0,
+//                            id_nguoidung = userId,
+//                            id_khoanchi = selectedKhoanChi!!.id,
+//                            id_taikhoan = taikhoanchinh.id,
+//                            so_tien = sotien,
+//                            ngay_tao = formatMillisToDB(selectedDate),
+//                            ghi_chu = mota
+//                        )
+//                        chiTieuViewModel.createChiTieu(chiTieu)
 
                         snackbarType = SnackbarType.SUCCESS
                         snackbarMessage = "Thêm chi tiêu thành công"

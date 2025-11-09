@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,18 +41,17 @@ import androidx.compose.ui.unit.dp
 import androidx.emoji2.text.EmojiCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.Quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components.ColorPickerRow
-import com.example.Quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components.EmojiRow
 import com.example.quanlythuchi_android_firestore.Components.CusTomTextField
 import com.example.quanlythuchi_android_firestore.Components.CustomButton
 import com.example.quanlythuchi_android_firestore.Components.CustomDatePicker
 import com.example.quanlythuchi_android_firestore.Components.DotLoading
-import com.example.quanlythuchi_android_firestore.Components.EmojiPickerGrid
 import com.example.quanlythuchi_android_firestore.Utils.formatCurrency
 import com.example.quanlythuchi_android_firestore.Utils.formatMillisToDB
 import com.example.quanlythuchi_android_firestore.Utils.parseDateToMillis
 import com.example.quanlythuchi_android_firestore.ViewModels.KhoanChiViewModel
 import com.example.quanlythuchi_android_firestore.domain.model.KhoanChiModel
+import com.example.quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components.ColorPickerRow
+import com.example.quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components.EmojiRow
 import com.example.quanlythuchi_android_firestore.ui.components.CustomSnackbar
 import com.example.quanlythuchi_android_firestore.ui.components.EmojiPickerBottomSheet
 import com.example.quanlythuchi_android_firestore.ui.components.Header
@@ -70,8 +70,8 @@ fun UpdateKhoanChiScreen(
     userId: Int,
     khoanChiViewModel: KhoanChiViewModel = hiltViewModel()
 ) {
-    val khoanChiState = khoanChiViewModel.getKhoanChiByIdState
-    val updateState = khoanChiViewModel.updateKhoanChiState
+    val khoanChiState by khoanChiViewModel.getById.collectAsState()
+    val updateState by khoanChiViewModel.updateState.collectAsState()
 
     // State UI
     var tenKhoanChi by remember { mutableStateOf("") }
@@ -91,19 +91,19 @@ fun UpdateKhoanChiScreen(
 
     // 🔹 Lấy dữ liệu khi mở màn hình
     LaunchedEffect(id_khoanChi) {
-        khoanChiViewModel.getKhoanChiById(id_khoanChi)
+        khoanChiViewModel.getKhoanChiById(id_khoanChi.toString())
     }
 
     // 🔹 Gán dữ liệu khi API thành công
     LaunchedEffect(khoanChiState) {
         if (khoanChiState is UiState.Success) {
-            with(khoanChiState.data) {
-                tenKhoanChi = ten_khoanchi
-                soTien = so_tien_du_kien
+            with((khoanChiState as UiState.Success<KhoanChiModel>).data) {
+                tenKhoanChi = ten_khoanchi!!
+                soTien = so_tien_du_kien!!
                 selectedColor = mausac ?: ""
                 emoji = this.emoji ?: ""
-                ngayBatDau = parseDateToMillis(ngay_batdau)
-                ngayKetThuc = parseDateToMillis(ngay_ketthuc)
+                ngayBatDau = parseDateToMillis(ngay_batdau!!)
+                ngayKetThuc = parseDateToMillis(ngay_ketthuc!!)
             }
         }
     }
@@ -117,16 +117,14 @@ fun UpdateKhoanChiScreen(
                 snackbarVisible = true
                 delay(1000)
                 navController.popBackStack()
-                khoanChiViewModel.resetUpdateState()
             }
 
             is UiState.Error -> {
-                snackbarMessage = updateState.message
+                snackbarMessage = (updateState as UiState.Error).message
                 snackbarType = SnackbarType.ERROR
                 snackbarVisible = true
                 delay(2500)
                 snackbarVisible = false
-                khoanChiViewModel.resetUpdateState()
             }
 
             else -> Unit
@@ -232,11 +230,10 @@ fun UpdateKhoanChiScreen(
                             title = "Lưu khoản chi",
                             onClick = {
                                 khoanChiViewModel.updateKhoanChi(
-                                    id_khoanchi = id_khoanChi,
                                     khoanchi = KhoanChiModel(
-                                        id = id_khoanChi,
+                                        id = id_khoanChi.toString(),
                                         ten_khoanchi = tenKhoanChi,
-                                        id_nguoidung = userId,
+                                        id_nguoidung = userId.toString(),
                                         mausac = selectedColor,
                                         ngay_batdau = formatMillisToDB(ngayBatDau),
                                         ngay_ketthuc = formatMillisToDB(ngayKetThuc),
@@ -249,7 +246,7 @@ fun UpdateKhoanChiScreen(
                     }
                 }
 
-                is UiState.Error -> Text("Lỗi: ${khoanChiState.message}")
+                is UiState.Error -> Text("Lỗi: ${(khoanChiState as UiState.Error).message}")
             }
 
             // 🎭 Dialog emoji

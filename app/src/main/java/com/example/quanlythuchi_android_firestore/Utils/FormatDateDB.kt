@@ -1,5 +1,6 @@
 package com.example.quanlythuchi_android_firestore.Utils
 
+import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -40,5 +41,9 @@ fun parseDateToMillis(dateString: String): Long {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val localDate = LocalDate.parse(dateString, formatter)
     return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+}
+
+fun formatMillisToDBFirebase(millis: Long?): Timestamp? {
+    return millis?.let { Timestamp(Date(it)) } // Long millis -> Firebase Timestamp
 }
 

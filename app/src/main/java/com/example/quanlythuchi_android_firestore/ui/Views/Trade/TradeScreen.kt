@@ -62,7 +62,7 @@ fun TradeScreen(
     // ✅ Gọi API khi mở màn hình
     LaunchedEffect(userId) {
         if (userId > 0) {
-            khoanChiViewModel.loadKhoanChiTheoThang(userId, currentMonth, currentYear)
+            khoanChiViewModel.getKhoanChiTheThangVaNam(userId.toString(), currentMonth, currentYear)
         }
     }
 
@@ -71,7 +71,7 @@ fun TradeScreen(
         if (userId > 0) {
             while (true) {
                 delay(15 * 60 * 1000L)
-                khoanChiViewModel.loadKhoanChi(userId)
+                khoanChiViewModel.getAllKhoanChiByUser(userId.toString())
             }
         }
     }
@@ -81,7 +81,7 @@ fun TradeScreen(
         refreshing = isRefreshing,
         onRefresh = {
             isRefreshing = true
-            khoanChiViewModel.loadKhoanChi(userId)
+            khoanChiViewModel.getAllKhoanChiByUser(userId.toString())
             isRefreshing = false
         }
     )

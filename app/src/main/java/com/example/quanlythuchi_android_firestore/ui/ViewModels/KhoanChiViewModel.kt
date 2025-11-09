@@ -1,5 +1,6 @@
 package com.example.quanlythuchi_android_firestore.ViewModels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,36 +22,38 @@ import javax.inject.Inject
 class KhoanChiViewModel @Inject constructor(
     private val repo: KhoanChiRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<UiState<List<KhoanChiModel>>>(UiState.Loading)
-    val uiState: StateFlow<UiState<List<KhoanChiModel>>> = _uiState
+    private val _getAllByUserState = MutableStateFlow<UiState<List<KhoanChiModel>>>(UiState.Loading)
+    val getAllByUserState: StateFlow<UiState<List<KhoanChiModel>>> = _getAllByUserState
 
     private val _loadtheothang = MutableStateFlow<UiState<List<KhoanChiModel>>>(UiState.Loading)
     val loadtheothang: StateFlow<UiState<List<KhoanChiModel>>> = _loadtheothang
 
-    var createKhoanChiState by mutableStateOf<UiState<BaseResponse<KhoanChiModel>>>(UiState.Loading)
-        private set
-    var getKhoanChiByIdState by mutableStateOf<UiState<KhoanChiModel>>(UiState.Loading)
-        private set
-    var updateKhoanChiState by mutableStateOf<UiState<BaseResponseMes<KhoanChiModel>>>(UiState.Loading)
-        private set
-
-    var deleteKhoanChiState by mutableStateOf<UiState<StatusResponse>>(UiState.Loading)
-        private set
+    private val _createState = MutableStateFlow<UiState<StatusResponse>>(UiState.Loading)
+    val createState: StateFlow<UiState<StatusResponse>> = _createState
 
 
-    fun loadKhoanChi(userId: Int) {
+    private val _getByIdState = MutableStateFlow<UiState<KhoanChiModel>>(UiState.Loading)
+    val getById: StateFlow<UiState<KhoanChiModel>> = _getByIdState
+    private val _updateState = MutableStateFlow<UiState<StatusResponse>>(UiState.Loading)
+    val updateState: StateFlow<UiState<StatusResponse>> = _updateState
+
+    private val _deleteState = MutableStateFlow<UiState<StatusResponse>>(UiState.Loading)
+    val deleteState: StateFlow<UiState<StatusResponse>> = _deleteState
+
+
+    fun getAllKhoanChiByUser(userId: String) {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            _getAllByUserState.value = UiState.Loading
             try {
                 val result = repo.getKhoanChi(userId)
-                _uiState.value = UiState.Success(result)
+                _getAllByUserState.value = UiState.Success(result)
             } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
+                _getAllByUserState.value = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
             }
         }
     }
 
-    fun loadKhoanChiTheoThang(userId: Int, thang:Int, nam:Int) {
+    fun getKhoanChiTheThangVaNam(userId: String, thang:Int, nam:Int) {
         viewModelScope.launch {
             _loadtheothang.value = UiState.Loading
             try {
@@ -62,15 +65,15 @@ class KhoanChiViewModel @Inject constructor(
         }
     }
 
-    fun getKhoanChiById(id_khoanchi: Int) {
+    fun getKhoanChiById(id_khoanchi: String) {
         viewModelScope.launch {
-            getKhoanChiByIdState = UiState.Loading
+            _getByIdState.value = UiState.Loading
             try {
                 val result = repo.getKhoanChiById(id_khoanchi)
-                getKhoanChiByIdState = UiState.Success(result)
+                _getByIdState.value = UiState.Success(result)
             } catch (e: Exception) {
                 e.printStackTrace()
-                getKhoanChiByIdState = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
+                _getByIdState.value = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
             }
         }
     }
@@ -78,58 +81,49 @@ class KhoanChiViewModel @Inject constructor(
 
     fun createKhoanChi(khoanchi: KhoanChiModel) {
         viewModelScope.launch {
-            createKhoanChiState = UiState.Loading
+            _createState.value = UiState.Loading
             try {
-                val result = repo.createKhoanChi(khoanchi)
-                createKhoanChiState = UiState.Success(result)
-            } catch (e: Exception) {
-                createKhoanChiState = UiState.Error(e.message ?: "Unknown error")
-            }
-        }
-    }
-
-    fun updateKhoanChi(id_khoanchi: Int, khoanchi: KhoanChiModel) {
-        viewModelScope.launch {
-            updateKhoanChiState = UiState.Loading
-            try {
-                val result = repo.updateKhoanChi(id_khoanchi, khoanchi)
-                if (result.success) {
-                    updateKhoanChiState = UiState.Success(result)
+                val response = repo.createKhoanChi(khoanchi)
+                if (response.success) {
+                    _createState.value = UiState.Success(response)
                 } else {
-                    updateKhoanChiState = UiState.Error(result.message)
+                    _createState.value = UiState.Error(response.message ?: "Không thể tạo khoản chi")
                 }
             } catch (e: Exception) {
-                updateKhoanChiState = UiState.Error(e.message ?: "Lỗi không xác định")
+                _createState.value = UiState.Error(e.message ?: "Lỗi không xác định")
             }
         }
     }
 
-    fun deleteKhoanChi(id_khoanchi: Int) {
+    fun updateKhoanChi(khoanchi: KhoanChiModel) {
         viewModelScope.launch {
-            deleteKhoanChiState = UiState.Loading
+            _updateState.value = UiState.Loading
+            try {
+                val result = repo.updateKhoanChi(khoanchi)
+                if (result.success) {
+                    _updateState.value = UiState.Success(result)
+                } else {
+                    _updateState.value = UiState.Error(result.message)
+                }
+            } catch (e: Exception) {
+                _updateState.value = UiState.Error(e.message ?: "Lỗi không xác định")
+            }
+        }
+    }
+
+    fun deleteKhoanChi(id_khoanchi: String) {
+        viewModelScope.launch {
+            _deleteState.value = UiState.Loading
             try {
                 val result = repo.deleteKhoanChi(id_khoanchi)
                 if (result.success) {
-                    deleteKhoanChiState = UiState.Success(result)
+                    _deleteState.value = UiState.Success(result)
                 } else {
-                    deleteKhoanChiState = UiState.Error(result.message)
+                    _deleteState.value = UiState.Error(result.message)
                 }
             } catch (e: Exception) {
-                deleteKhoanChiState = UiState.Error(e.message ?: "Lỗi không xác định")
+                _deleteState.value = UiState.Error(e.message ?: "Lỗi không xác định")
             }
         }
     }
-
-    fun resetCreateKhoanChiState() {
-        createKhoanChiState = UiState.Loading
-    }
-
-    fun resetUpdateState() {
-        updateKhoanChiState = UiState.Loading
-    }
-
-    fun resetDeleteState() {
-        deleteKhoanChiState = UiState.Loading
-    }
-
 }

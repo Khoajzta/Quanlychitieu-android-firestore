@@ -54,157 +54,157 @@ fun ThongKeTheoNamScreen(
     thuNhapViewModel: ThuNhapViewModel = hiltViewModel(),
     chiTieuViewModel: ChiTieuViewModel = hiltViewModel(),
 ) {
-    val currentDate = LocalDate.now()
-    val currentYear = currentDate.year
-
-    val thongKeChiTieuState by chiTieuViewModel.thongKeTheoNam.collectAsState()
-    val thongKeThuNhapState by thuNhapViewModel.thongKeTheoNamState.collectAsState()
-
-    // Gọi API khi userId thay đổi
-    LaunchedEffect(userId) {
-        chiTieuViewModel.thongKeChiTieuTheoNam(userId, currentYear)
-        thuNhapViewModel.thongKeTheoNam(userId, currentYear)
-    }
-
-    // Kiểm tra state trước khi map
-    val isLoading = thongKeChiTieuState is UiState.Loading || thongKeThuNhapState is UiState.Loading
-    val isError = thongKeChiTieuState is UiState.Error || thongKeThuNhapState is UiState.Error
-    val isSuccess = thongKeChiTieuState is UiState.Success && thongKeThuNhapState is UiState.Success
-
-    val chitieuTheoNam = (thongKeChiTieuState as? UiState.Success)?.data ?: emptyList()
-    val thuNhapTheoNam = (thongKeThuNhapState as? UiState.Success)?.data ?: emptyList()
-
-    val thongKeList = (1..12).map { thang ->
-        val chiThang = chitieuTheoNam.find { it.thang == thang }?.tongChi ?: 0L
-        val thuThang = thuNhapTheoNam.find { it.thang == thang }?.tongThu ?: 0L
-
-        ThongKeThangModel(
-            thang = thang,
-            tongChi = chiThang,
-            tongThu = thuThang
-        )
-    }
-
-    val tongChiNam = thongKeList.sumOf { it.tongChi }
-    val tongThuNam = thongKeList.sumOf { it.tongThu }
-    val chenhlech = tongThuNam - tongChiNam
-
-    val topChi = thongKeList.sortedByDescending { it.tongChi }.take(3)
-    val topThu = thongKeList.sortedByDescending { it.tongThu }.take(3)
-
-    val maxValue = (thongKeList.maxOfOrNull { maxOf(it.tongChi, it.tongThu) } ?: 1).toFloat()
-    val barWidth = 28.dp
-    val barSpace = 24.dp
-    val chartHeight = 400.dp
-
-    Scaffold(
-        containerColor = BackgroundColor,
-        topBar = {
-            Header(
-                navController = navController,
-                modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
-                title = "Thống kê theo năm",
-                userId = userId
-            )
-        },
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            when {
-                isLoading -> {
-                    DotLoading()
-                }
-
-                isError -> {
-                    Text(
-                        "Đã xảy ra lỗi khi tải dữ liệu",
-                        color = Color.Red,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                isSuccess -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(horizontal = PaddingBody)
-                            .fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(SpaceMedium),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        item {
-                            CardThongKe(
-                                modifier = Modifier,
-                                nam = currentYear,
-                                tongChiNam = tongChiNam,
-                                tongThuNam = tongThuNam,
-                                chenhlech = chenhlech
-                            )
-                        }
-
-                        item {
-                            Text(
-                                "Biểu đồ thống kê năm ${currentYear}",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 17.sp,
-                                color = Color.Black,
-                            )
-                        }
-
-                        item {
-                            BieuDoThongKe(
-                                modifier = Modifier,
-                                chartHeight = chartHeight,
-                                barWidth = barWidth,
-                                barSpace = barSpace,
-                                thongKeList = thongKeList,
-                                maxValue = maxValue
-                            )
-                        }
-
-                        item {
-                            Spacer(modifier = Modifier.height(SpaceMedium))
-                        }
-
-                        item {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                LegendItem(color = Color(0xFF4ECDC4), text = "Thu nhập")
-                                Spacer(Modifier.width(20.dp))
-                                LegendItem(color = Color(0xFFFF6B6B), text = "Chi tiêu")
-                            }
-                        }
-                        item {
-                            Spacer(modifier = Modifier.height(SpaceMedium))
-                        }
-
-                        item {
-                            TopThongKe(
-                                modifier = Modifier,
-                                topChi = topChi,
-                                topThu = topThu
-                            )
-                        }
-
-                        item {
-                            Spacer(modifier = Modifier.height(30.dp))
-                        }
-                    }
-                }
-
-                else -> {
-                    // Trường hợp chưa có dữ liệu (initial)
-                    Text("Chưa có dữ liệu thống kê", color = Color.Gray)
-                }
-            }
-        }
-    }
+//    val currentDate = LocalDate.now()
+//    val currentYear = currentDate.year
+//
+//    val thongKeChiTieuState by chiTieuViewModel.thongKeTheoNam.collectAsState()
+//    val thongKeThuNhapState by thuNhapViewModel.thongKeTheoNamState.collectAsState()
+//
+//    // Gọi API khi userId thay đổi
+//    LaunchedEffect(userId) {
+//        chiTieuViewModel.thongKeChiTieuTheoNam(userId, currentYear)
+//        thuNhapViewModel.thongKeTheoNam(userId, currentYear)
+//    }
+//
+//    // Kiểm tra state trước khi map
+//    val isLoading = thongKeChiTieuState is UiState.Loading || thongKeThuNhapState is UiState.Loading
+//    val isError = thongKeChiTieuState is UiState.Error || thongKeThuNhapState is UiState.Error
+//    val isSuccess = thongKeChiTieuState is UiState.Success && thongKeThuNhapState is UiState.Success
+//
+//    val chitieuTheoNam = (thongKeChiTieuState as? UiState.Success)?.data ?: emptyList()
+//    val thuNhapTheoNam = (thongKeThuNhapState as? UiState.Success)?.data ?: emptyList()
+//
+//    val thongKeList = (1..12).map { thang ->
+//        val chiThang = chitieuTheoNam.find { it.thang == thang }?.tongChi ?: 0L
+//        val thuThang = thuNhapTheoNam.find { it.thang == thang }?.tongThu ?: 0L
+//
+//        ThongKeThangModel(
+//            thang = thang,
+//            tongChi = chiThang,
+//            tongThu = thuThang
+//        )
+//    }
+//
+//    val tongChiNam = thongKeList.sumOf { it.tongChi }
+//    val tongThuNam = thongKeList.sumOf { it.tongThu }
+//    val chenhlech = tongThuNam - tongChiNam
+//
+//    val topChi = thongKeList.sortedByDescending { it.tongChi }.take(3)
+//    val topThu = thongKeList.sortedByDescending { it.tongThu }.take(3)
+//
+//    val maxValue = (thongKeList.maxOfOrNull { maxOf(it.tongChi, it.tongThu) } ?: 1).toFloat()
+//    val barWidth = 28.dp
+//    val barSpace = 24.dp
+//    val chartHeight = 400.dp
+//
+//    Scaffold(
+//        containerColor = BackgroundColor,
+//        topBar = {
+//            Header(
+//                navController = navController,
+//                modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
+//                title = "Thống kê theo năm",
+//                userId = userId
+//            )
+//        },
+//        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+//    ) { innerPadding ->
+//        Box(
+//            modifier = Modifier
+//                .padding(innerPadding)
+//                .fillMaxSize(),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            when {
+//                isLoading -> {
+//                    DotLoading()
+//                }
+//
+//                isError -> {
+//                    Text(
+//                        "Đã xảy ra lỗi khi tải dữ liệu",
+//                        color = Color.Red,
+//                        fontWeight = FontWeight.Bold
+//                    )
+//                }
+//
+//                isSuccess -> {
+//                    LazyColumn(
+//                        modifier = Modifier
+//                            .padding(horizontal = PaddingBody)
+//                            .fillMaxSize(),
+//                        verticalArrangement = Arrangement.spacedBy(SpaceMedium),
+//                        horizontalAlignment = Alignment.CenterHorizontally
+//                    ) {
+//                        item {
+//                            CardThongKe(
+//                                modifier = Modifier,
+//                                nam = currentYear,
+//                                tongChiNam = tongChiNam,
+//                                tongThuNam = tongThuNam,
+//                                chenhlech = chenhlech
+//                            )
+//                        }
+//
+//                        item {
+//                            Text(
+//                                "Biểu đồ thống kê năm ${currentYear}",
+//                                fontWeight = FontWeight.Bold,
+//                                fontSize = 17.sp,
+//                                color = Color.Black,
+//                            )
+//                        }
+//
+//                        item {
+//                            BieuDoThongKe(
+//                                modifier = Modifier,
+//                                chartHeight = chartHeight,
+//                                barWidth = barWidth,
+//                                barSpace = barSpace,
+//                                thongKeList = thongKeList,
+//                                maxValue = maxValue
+//                            )
+//                        }
+//
+//                        item {
+//                            Spacer(modifier = Modifier.height(SpaceMedium))
+//                        }
+//
+//                        item {
+//                            Row(
+//                                horizontalArrangement = Arrangement.Center,
+//                                modifier = Modifier.fillMaxWidth()
+//                            ) {
+//                                LegendItem(color = Color(0xFF4ECDC4), text = "Thu nhập")
+//                                Spacer(Modifier.width(20.dp))
+//                                LegendItem(color = Color(0xFFFF6B6B), text = "Chi tiêu")
+//                            }
+//                        }
+//                        item {
+//                            Spacer(modifier = Modifier.height(SpaceMedium))
+//                        }
+//
+//                        item {
+//                            TopThongKe(
+//                                modifier = Modifier,
+//                                topChi = topChi,
+//                                topThu = topThu
+//                            )
+//                        }
+//
+//                        item {
+//                            Spacer(modifier = Modifier.height(30.dp))
+//                        }
+//                    }
+//                }
+//
+//                else -> {
+//                    // Trường hợp chưa có dữ liệu (initial)
+//                    Text("Chưa có dữ liệu thống kê", color = Color.Gray)
+//                }
+//            }
+//        }
+//    }
 }
 
 @Composable
