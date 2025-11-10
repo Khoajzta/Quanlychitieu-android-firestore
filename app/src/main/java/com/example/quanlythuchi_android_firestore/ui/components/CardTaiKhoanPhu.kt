@@ -227,8 +227,8 @@ fun CardTaiKhoanSwipeToDelete(
 @Preview
 fun CardTaiKhoanPhuPreview() {
    var taikhoan = TaiKhoanModel(
-        id = 1,
-        id_nguoidung = 1,
+        id = "1",
+        id_nguoidung = "1",
         ten_taikhoan = "Tiền mua xe",
         so_du = 2500000,
         loai_taikhoan = 1,

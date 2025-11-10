@@ -21,19 +21,19 @@ class DataStoreManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     companion object {
-        private val USER_ID_KEY = intPreferencesKey("user_id")
+        private val USER_ID_KEY = stringPreferencesKey("user_id") // ✅ đổi sang stringPreferencesKey
         private val FIRST_LAUNCH_KEY = booleanPreferencesKey("first_launch")
     }
 
     // Lưu userId
-    suspend fun saveUserId(userId: Int) {
+    suspend fun saveUserId(userId: String) {
         context.dataStore.edit { prefs ->
             prefs[USER_ID_KEY] = userId
         }
     }
 
     // Lấy userId
-    fun getUserId(): Flow<Int?> {
+    fun getUserId(): Flow<String?> {
         return context.dataStore.data.map { prefs ->
             prefs[USER_ID_KEY]
         }
@@ -45,6 +45,8 @@ class DataStoreManager @Inject constructor(
             prefs.remove(USER_ID_KEY)
         }
     }
+
+    // Lưu trạng thái mở lần đầu
     suspend fun setFirstLaunch(isFirst: Boolean) {
         context.dataStore.edit { prefs ->
             prefs[FIRST_LAUNCH_KEY] = isFirst
@@ -57,5 +59,5 @@ class DataStoreManager @Inject constructor(
             prefs[FIRST_LAUNCH_KEY] ?: true // Mặc định true nếu chưa set
         }
     }
-
 }
+

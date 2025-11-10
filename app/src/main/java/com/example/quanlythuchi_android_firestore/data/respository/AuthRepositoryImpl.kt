@@ -41,7 +41,7 @@ class AuthRepositoryImpl @Inject constructor(
 
             UiState.Success(
                 NguoiDungModel(
-                    id = 0,
+                    id = "",
                     ten = user.displayName ?: "",
                     email = user.email ?: "",
                     url_avt = user.photoUrl.toString(),

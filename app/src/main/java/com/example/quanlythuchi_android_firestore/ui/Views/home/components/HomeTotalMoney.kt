@@ -56,7 +56,7 @@ fun HomeTotalMoney(
             .clip(RoundedCornerShape(28.dp))
             .background(
                 Brush.linearGradient(
-                    colors = listOf(Color(0xFF8BC6EC), Color(0xFF9599E2)), // gradient pastel
+                    colors = listOf(Color(0xFF65B3E8), Color(0xFF8488E8)), // gradient pastel
                     start = Offset(0f, 0f),
                     end = Offset(400f, 400f)
                 )
@@ -82,7 +82,7 @@ fun HomeTotalMoney(
                     fontWeight = FontWeight.Bold
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "Khoản chi dự kiến",
                     color = Color.White.copy(0.7f),
@@ -95,6 +95,7 @@ fun HomeTotalMoney(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.height(6.dp))
             }
 
             // 💰 Phần dưới: Thống kê thu / chi trong tháng
@@ -162,8 +163,8 @@ fun HomeTotalMoney(
 fun PreviewHomeTotalMoney() {
 
     var taikhoan =TaiKhoanModel(
-        id = 1,
-        id_nguoidung = 1,
+        id = "1",
+        id_nguoidung = "1",
         ten_taikhoan = "Tiền mua xe",
         so_du = 2500000,
         loai_taikhoan = 1,

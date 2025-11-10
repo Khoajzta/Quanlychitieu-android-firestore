@@ -51,7 +51,7 @@ import java.time.LocalDate
 @Composable
 fun ListKhoanChiScreen(
     navController: NavController,
-    userId: Int,
+    userId: String,
     khoanChiViewModel: KhoanChiViewModel = hiltViewModel(),
 ){
     val currentDate = LocalDate.now()
@@ -62,12 +62,7 @@ fun ListKhoanChiScreen(
     val deleteState by khoanChiViewModel.deleteState.collectAsState()
 
     LaunchedEffect(userId) {
-        if (userId > 0) {
-            while (true) {
-                khoanChiViewModel.getKhoanChiTheThangVaNam(userId.toString(), currentMonth, currentYear)
-                delay(15 * 60 * 1000L)
-            }
-        }
+        khoanChiViewModel.getKhoanChiTheThangVaNam(userId, currentMonth, currentYear)
     }
 
     val khoanChiList = when (khoanChiuiState) {
@@ -92,7 +87,7 @@ fun ListKhoanChiScreen(
             confirmButtonColor = Color.Red,
             onConfirm = {
                 khoanChiToDelete?.let {
-//                    khoanChiViewModel.deleteKhoanChi(it.id)
+                    khoanChiViewModel.deleteKhoanChi(it.id!!)
                 }
                 khoanChiToDelete = null
             },
@@ -154,20 +149,20 @@ fun ListKhoanChiScreen(
                                 item = khoanchi,
                                 modifier = Modifier,
                                 onDetailClick = {
-//                                    navController.navigate(
-//                                        Screen.KhoanChiDetail.createRoute(
-//                                            id_khoanChi = khoanchi.id,
-//                                            userId = userId
-//                                        )
-//                                    )
+                                    navController.navigate(
+                                        Screen.KhoanChiDetail.createRoute(
+                                            id_khoanChi = khoanchi.id!!,
+                                            userId = userId
+                                        )
+                                    )
                                 },
                                 onEdit = {
-//                                    navController.navigate(
-//                                        Screen.UpdateKhoanChi.createRoute(
-//                                            userId,
-//                                            id_khoanchi = khoanchi.id
-//                                        )
-//                                    )
+                                    navController.navigate(
+                                        Screen.UpdateKhoanChi.createRoute(
+                                            userId,
+                                            id_khoanchi = khoanchi.id!!
+                                        )
+                                    )
                                 },
                                 onDelete = {
                                     khoanChiToDelete = khoanchi
@@ -207,9 +202,7 @@ fun ListKhoanChiScreen(
             // ⏳ Tự ẩn Snackbar + gọi lại dữ liệu an toàn
             LaunchedEffect(snackbarVisible) {
                 if (snackbarVisible) {
-                    if (userId > 0) {
-                        khoanChiViewModel.getAllKhoanChiByUser(userId.toString())
-                    }
+                    khoanChiViewModel.getAllKhoanChiByUser(userId)
                     delay(3000)
                     snackbarVisible = false
                 }

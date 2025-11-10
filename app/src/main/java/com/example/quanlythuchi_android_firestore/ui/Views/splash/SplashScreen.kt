@@ -6,6 +6,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.quanlythuchi_android_firestore.Components.CustomButton
 import com.example.quanlythuchi_android_firestore.Components.DotLoading
 import com.example.quanlythuchi_android_firestore.R
@@ -146,7 +149,8 @@ fun SplashScreen(
                         },
                         modifier = Modifier
                             .graphicsLayer(alpha = alpha.value)
-                            .fillMaxWidth(0.8f)
+                            .fillMaxWidth(),
+                        tralingIcon = Icons.Default.ArrowForward
                     )
                 }
                 false -> {
@@ -173,8 +177,10 @@ fun SplashScreen(
 @Preview
 @Composable
 fun PreviewSplashScreen() {
-//    SplashScreen(
-//        onNavigateToHome = {},
-//        onNavigateToLogin = {}
-//    )
+    val navController = rememberNavController()
+
+    SplashScreen(
+        navController,
+        onNavigateToLogin = {},
+    )
 }

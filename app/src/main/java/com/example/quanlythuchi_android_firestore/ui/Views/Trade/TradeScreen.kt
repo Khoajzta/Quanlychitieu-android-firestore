@@ -49,7 +49,7 @@ import java.time.LocalDate
 @Composable
 fun TradeScreen(
     navController: NavController,
-    userId: Int,
+    userId: String,
     khoanChiViewModel: KhoanChiViewModel = hiltViewModel(),
 ) {
     val khoanChiUiState by khoanChiViewModel.loadtheothang.collectAsState()
@@ -61,19 +61,12 @@ fun TradeScreen(
 
     // ✅ Gọi API khi mở màn hình
     LaunchedEffect(userId) {
-        if (userId > 0) {
-            khoanChiViewModel.getKhoanChiTheThangVaNam(userId.toString(), currentMonth, currentYear)
-        }
+        khoanChiViewModel.getKhoanChiTheThangVaNam(userId.toString(), currentMonth, currentYear)
     }
 
     // ✅ Cập nhật tự động mỗi 15 phút (không block UI)
     LaunchedEffect(userId) {
-        if (userId > 0) {
-            while (true) {
-                delay(15 * 60 * 1000L)
-                khoanChiViewModel.getAllKhoanChiByUser(userId.toString())
-            }
-        }
+        khoanChiViewModel.getAllKhoanChiByUser(userId.toString())
     }
 
     // ✅ Trạng thái refresh

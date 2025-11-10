@@ -54,11 +54,11 @@ import kotlinx.coroutines.delay
 @Composable
 fun NganSachScreen(
     navController: NavController,
-    userId: Int,
+    userId: String,
     taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel()
 ) {
     // 📌 State từ ViewModel
-    val taikhoanUiState by taiKhoanViewModel.uiState.collectAsState()
+    val taikhoanUiState by taiKhoanViewModel.loadtaikhoanState.collectAsState()
     val deleteTaiKhoanState by taiKhoanViewModel.deleteKhoanState.collectAsState()
     val updateTaiKhoanState by taiKhoanViewModel.updateTaiKhoanState.collectAsState()
 
@@ -70,7 +70,9 @@ fun NganSachScreen(
     // 📌 Refresh state
     val refreshState = rememberPullRefreshState(
         refreshing = taikhoanUiState is UiState.Loading,
-        onRefresh = { taiKhoanViewModel.loadTaiKhoans(userId) }
+        onRefresh = {
+            taiKhoanViewModel.loadTaiKhoans(userId)
+        }
     )
 
     // 📌 Load danh sách tài khoản khi vào màn hình
@@ -109,7 +111,7 @@ fun NganSachScreen(
                 snackbarType = SnackbarType.SUCCESS
                 snackbarMessage = "Xóa tài khoản thành công"
                 snackbarVisible = true
-                taiKhoanViewModel.loadTaiKhoans(userId)
+//                taiKhoanViewModel.loadTaiKhoans(userId)
             }
             is UiState.Error -> {
                 snackbarType = SnackbarType.ERROR
@@ -172,7 +174,9 @@ fun NganSachScreen(
                     items(listTaiKhoan.filter { it.loai_taikhoan == 0 }) { taiKhoan ->
                         CardTaiKhoanSwipeToDelete(
                             taikhoan = taiKhoan,
-                            onDelete = { taiKhoanViewModel.deleteTaiKhoan(it.id) }
+                            onDelete = {
+//                                taiKhoanViewModel.deleteTaiKhoan(it.id)
+                            }
                         )
                     }
 
@@ -212,5 +216,5 @@ fun NganSachScreen(
 @Preview
 fun NganSachScreenPreview(){
     var navController = rememberNavController()
-    NganSachScreen(navController,1)
+    NganSachScreen(navController,"1")
 }

@@ -56,11 +56,11 @@ import kotlinx.coroutines.delay
 @Composable
 fun ChuyenTienScreen(
     navController: NavController,
-    userId:Int,
+    userId: String,
     taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel()
 ){
 
-    val taikhoanUiState by taiKhoanViewModel.uiState.collectAsState()
+    val taikhoanUiState by taiKhoanViewModel.loadtaikhoanState.collectAsState()
     val chuyenTienState by taiKhoanViewModel.chuyentienTaiKhoanState.collectAsState()
 
     var snackbarVisible by remember { mutableStateOf(false) }
@@ -219,6 +219,7 @@ fun ChuyenTienScreen(
                                     )
 
                                     taiKhoanViewModel.chuyenTien(chuyenTienRequest)
+                                    taiKhoanViewModel.loadTaiKhoans(userId)
 
                                     snackbarType = SnackbarType.SUCCESS
                                     snackbarMessage = "Chuyển tiền thành công"

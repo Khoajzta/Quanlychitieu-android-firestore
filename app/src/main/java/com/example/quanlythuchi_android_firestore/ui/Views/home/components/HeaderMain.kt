@@ -68,7 +68,7 @@ fun HeaderMain(
                             .padding(5.dp,)
 
                     ){
-                        LoadAnhTuUrl(url = user.url_avt, modifier = Modifier.size(30.dp).clip(CircleShape)  )
+                        LoadAnhTuUrl(url = user.url_avt!!, modifier = Modifier.size(30.dp).clip(CircleShape)  )
                     }
                     Spacer(modifier = Modifier.width(10.dp))
                     Column(
@@ -83,7 +83,7 @@ fun HeaderMain(
                             lineHeight = 12.sp
                         )
                         Text(
-                            text = user.ten,
+                            text = user.ten!!,
                             color = Color.White,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,

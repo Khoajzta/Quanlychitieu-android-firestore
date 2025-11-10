@@ -24,7 +24,7 @@ import com.example.quanlythuchi_android_firestore.ui.theme.PrimaryColor
 fun KhoanChiMoreRow(
     modifier: Modifier = Modifier,
     navController: NavController,
-    userId :Int
+    userId : String
 ){
     Row(
         modifier = modifier
@@ -59,5 +59,5 @@ fun KhoanChiMoreRow(
 @Preview
 fun KhoanChiMoreRowPreview(){
     var navController = rememberNavController()
-    KhoanChiMoreRow(modifier = Modifier, navController=navController, 1)
+    KhoanChiMoreRow(modifier = Modifier, navController=navController, "1")
 }

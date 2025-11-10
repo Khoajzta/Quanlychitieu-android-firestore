@@ -71,7 +71,7 @@ import java.util.Calendar
 @Composable
 fun AddKhoanChiScreen(
     navController: NavController,
-    userId: Int,
+    userId: String,
     khoanchiViewModel: KhoanChiViewModel = hiltViewModel()
 ) {
     var sotien by remember { mutableStateOf(0L) }
@@ -281,5 +281,5 @@ fun AddKhoanChiScreen(
 @Preview
 fun AddKhoanChiPreview(){
     var navController = rememberNavController()
-    AddKhoanChiScreen(navController,1)
+    AddKhoanChiScreen(navController,"1")
 }

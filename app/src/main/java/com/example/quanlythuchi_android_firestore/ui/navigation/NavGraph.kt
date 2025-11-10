@@ -76,10 +76,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             HomeScreen(
                 userId = userId,
@@ -95,10 +95,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             ProfileScreen(
                 navController = navController,
@@ -114,10 +114,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             TradeScreen(
                 navController = navController,
@@ -133,10 +133,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             NganSachScreen(
                 navController = navController,
@@ -152,10 +152,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             AddTradeScreen(
                 navController = navController,
@@ -170,10 +170,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
             ListKhoanChiScreen(
                 navController = navController,
                 userId = userId,
@@ -187,12 +187,12 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("id_khoanChi") { type = NavType.IntType },
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("id_khoanChi") { type = NavType.StringType },
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val id_khoanChi = backStackEntry.arguments?.getInt("id_khoanChi") ?: 0
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val id_khoanChi = backStackEntry.arguments?.getString("id_khoanChi") ?: ""
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
             KhoanChiDetailScreen(
                 navController = navController,
                 id_khoanChi = id_khoanChi,
@@ -209,10 +209,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
             AddKhoanChiScreen(navController, userId)
         }
 
@@ -223,13 +223,17 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType },
-                navArgument("id_khoanchi") { type = NavType.IntType },
+                navArgument("userId") { type = NavType.StringType },
+                navArgument("id_khoanchi") { type = NavType.StringType },
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
-            val id_khoanchi = backStackEntry.arguments?.getInt("id_khoanchi") ?: 0
-            UpdateKhoanChiScreen(navController, id_khoanChi = id_khoanchi, userId = userId )
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            val id_khoanchi = backStackEntry.arguments?.getString("id_khoanchi") ?: ""
+            UpdateKhoanChiScreen(
+                navController,
+                id_khoanChi = id_khoanchi,
+                userId = userId
+            )
         }
 
         composable(
@@ -239,10 +243,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             ChuyenTienScreen(
                 navController = navController,
@@ -256,10 +260,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             AddTaiKhoanScreen(
                 navController = navController,
@@ -274,10 +278,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             LichSuChuyenTienScreen(
                 navController = navController,
@@ -292,10 +296,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             ThongKeTheoNamScreen(
                 navController = navController,
@@ -310,10 +314,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             ListThuNhapTheoThangScreen(
                 navController = navController,
@@ -328,10 +332,10 @@ fun AppNavGraph(navController: NavHostController) {
             popEnterTransition = truotVaoTuTrai(),
             popExitTransition = truotRaSangPhai(),
             arguments = listOf(
-                navArgument("userId") { type = NavType.IntType }
+                navArgument("userId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
             ListChiTieuTheoThangScreen(
                 navController = navController,

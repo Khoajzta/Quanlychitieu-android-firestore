@@ -2,7 +2,6 @@ package com.example.quanlythuchi_android_firestore.data.respository
 
 import android.util.Log
 import com.example.quanlythuchi_android_firestore.Utils.getStartAndEndOfMonth
-import com.example.quanlythuchi_android_firestore.data.remote.ChiTieuAPIService
 import com.example.quanlythuchi_android_firestore.data.remote.dto.BaseResponse
 import com.example.quanlythuchi_android_firestore.data.remote.dto.BaseResponseMes
 import com.example.quanlythuchi_android_firestore.data.remote.dto.StatusResponse
@@ -21,7 +20,6 @@ import java.util.TimeZone
 import javax.inject.Inject
 
 class ChiTieuRepositoryImpl @Inject constructor(
-    private val firestore: FirebaseFirestore
 ) : ChiTieuRepository {
 
     private val db = Firebase.firestore
@@ -29,7 +27,7 @@ class ChiTieuRepositoryImpl @Inject constructor(
 
 
     override suspend fun getChiTieuTheoKhoanChiCuaNguoiDung(
-        id_khoanchi: Int,
+        id_khoanchi: String,
         userId: String
     ): BaseResponse<List<ChiTieuModel>> {
         return try {

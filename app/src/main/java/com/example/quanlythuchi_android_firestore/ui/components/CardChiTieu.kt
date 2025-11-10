@@ -81,11 +81,11 @@ fun CardChiTieu(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-//                Text(
-//                    text = "Ngày: ${formatDayDisplay(chitieu.ngay_tao)}",
-//                    fontSize = 14.sp,
-//                    color = Color.White.copy(alpha = 0.85f),
-//                )
+                Text(
+                    text = "Ngày: ${formatDayDisplay(chitieu.ngay_tao!!)}",
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.85f),
+                )
             }
 
 
@@ -98,12 +98,12 @@ fun CardChiTieu(
                     .padding(horizontal = 12.dp, vertical = 6.dp)
 
             ) {
-//                Text(
-//                    text = "💵 ${formatCurrency(chitieu.so_tien)}",
-//                    fontSize = 22.sp,
-//                    fontWeight = FontWeight.Bold,
-//                    color = Color.White
-//                )
+                Text(
+                    text = "💵 ${formatCurrency(chitieu.so_tien!!)}",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
             }
 
         }

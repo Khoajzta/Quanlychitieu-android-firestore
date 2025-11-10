@@ -66,8 +66,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun UpdateKhoanChiScreen(
     navController: NavController,
-    id_khoanChi: Int,
-    userId: Int,
+    id_khoanChi: String,
+    userId: String,
     khoanChiViewModel: KhoanChiViewModel = hiltViewModel()
 ) {
     val khoanChiState by khoanChiViewModel.getById.collectAsState()

@@ -44,7 +44,7 @@ data class BottomNavItem(
 fun BottomNavigationBar(
     navController: NavController? = null,
     modifier: Modifier = Modifier,
-    userId: Int
+    userId: String
 ) {
     val items = listOf(
         BottomNavItem("Home", "file:///android_asset/icons/ic_home.svg", Screen.Home.route),

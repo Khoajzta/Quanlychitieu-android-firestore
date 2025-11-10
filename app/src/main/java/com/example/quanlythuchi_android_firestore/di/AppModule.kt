@@ -4,12 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.example.quanlythuchi_android_firestore.Utils.BASE_URL
 import com.example.quanlythuchi_android_firestore.data.local.DataStoreManager
-import com.example.quanlythuchi_android_firestore.data.remote.ChiTieuAPIService
-import com.example.quanlythuchi_android_firestore.data.remote.ChuyenTienAPIService
-import com.example.quanlythuchi_android_firestore.data.remote.KhoanChiApiService
-import com.example.quanlythuchi_android_firestore.data.remote.NguoiDungAPIService
-import com.example.quanlythuchi_android_firestore.data.remote.TaiKhoanAPIService
-import com.example.quanlythuchi_android_firestore.data.remote.ThuNhapAPIService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -47,40 +41,11 @@ object AppModule {
             .build()
     }
 
-    @Provides
-    @Singleton
-    fun provideKhoanChiApiService(retrofit: Retrofit): KhoanChiApiService {
-        return retrofit.create(KhoanChiApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideNguoiDungApiService(retrofit: Retrofit): NguoiDungAPIService {
-        return retrofit.create(NguoiDungAPIService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun proviceTaiKhoanApiService(retrofit: Retrofit): TaiKhoanAPIService {
-        return retrofit.create(TaiKhoanAPIService::class.java)
-    }
 
     @Provides
     @Singleton
     fun provideFirebaseFirestore(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()
-    }
-
-    @Provides
-    @Singleton
-    fun proviceThuNhapApiService(retrofit: Retrofit): ThuNhapAPIService {
-        return retrofit.create(ThuNhapAPIService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun proviceChuyenTienApiService(retrofit: Retrofit): ChuyenTienAPIService {
-        return retrofit.create(ChuyenTienAPIService::class.java)
     }
 
     @Provides

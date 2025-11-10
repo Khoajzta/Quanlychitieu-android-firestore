@@ -93,7 +93,7 @@ fun CardFunction(
 @Composable
 fun FunctionRow(
     navController: NavController,
-    userId: Int
+    userId: String
 ) {
     LazyRow(
         modifier = Modifier

@@ -32,22 +32,18 @@ import kotlinx.coroutines.delay
 @Composable
 fun AddTradeScreen(
     navController: NavController,
-    userId :Int,
+    userId : String,
     khoanChiViewModel: KhoanChiViewModel = hiltViewModel(),
     taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel()
 ) {
 
     val KhoanChiuiState by khoanChiViewModel.getAllByUserState.collectAsState()
-    val taiKhoanUiState by taiKhoanViewModel.uiState.collectAsState()
+    val taiKhoanUiState by taiKhoanViewModel.loadtaikhoanState.collectAsState()
 
     LaunchedEffect(userId) {
-        if (userId > 0) {
-            while (true) {
-                khoanChiViewModel.getAllKhoanChiByUser(userId.toString())
-                taiKhoanViewModel.loadTaiKhoans(userId)
-                delay(15 * 60 * 1000L)
-            }
-        }
+        khoanChiViewModel.getAllKhoanChiByUser(userId)
+        taiKhoanViewModel.loadTaiKhoans(userId)
+        delay(15 * 60 * 1000L)
     }
 
     val khoanChiList = when (KhoanChiuiState) {

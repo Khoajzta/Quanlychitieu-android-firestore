@@ -19,6 +19,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,6 +34,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.quanlythuchi_android_firestore.Components.CustomButton
 import com.example.quanlythuchi_android_firestore.Components.DotLoading
+import com.example.quanlythuchi_android_firestore.domain.model.NguoiDungModel
 import com.example.quanlythuchi_android_firestore.ui.ViewModels.NguoiDungViewModel
 import com.example.quanlythuchi_android_firestore.ui.Views.Profile.components.AppSettingCard
 import com.example.quanlythuchi_android_firestore.ui.Views.Profile.components.ProfileAvartar
@@ -48,9 +51,9 @@ import com.example.quanquanlythuchi_android_firestorelychitieu.ui.Views.Profile.
 fun ProfileScreen(
     navController: NavController,
     nguoiDungViewModel: NguoiDungViewModel = hiltViewModel(),
-    userId: Int
+    userId: String
 ) {
-    val getNguoiDungState = nguoiDungViewModel.getByIdState
+    val getNguoiDungState by nguoiDungViewModel.getByIdState.collectAsState()
     val isDarkMode = remember { mutableStateOf(false) }
     val showLogoutDialog = remember { mutableStateOf(false) }
 
@@ -59,7 +62,7 @@ fun ProfileScreen(
     }
 
     val nguoiDung = when (getNguoiDungState) {
-        is UiState.Success -> getNguoiDungState.data.data
+        is UiState.Success -> (getNguoiDungState as UiState.Success<NguoiDungModel>).data
         else -> null
     }
 
@@ -93,12 +96,12 @@ fun ProfileScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             // Ảnh đại diện
-                            ProfileAvartar(url = it.url_avt)
+                            ProfileAvartar(url = it.url_avt!!)
 
                             Spacer(modifier = Modifier.height(16.dp))
 
                             // Tên + email
-                            ProfileNameEmail(name = it.ten, email = it.email)
+                            ProfileNameEmail(name = it.ten!!, email = it.email!!)
 
                             Spacer(modifier = Modifier.height(24.dp))
 
@@ -125,7 +128,7 @@ fun ProfileScreen(
                 is UiState.Loading -> DotLoading()
 
                 is UiState.Error -> Text(
-                    text = "Lỗi: ${getNguoiDungState.message}",
+                    text = "Lỗi: ${(getNguoiDungState as UiState.Error).message}",
                     color = Color.Red,
                     fontSize = 16.sp
                 )
@@ -188,5 +191,5 @@ fun ProfileInfoRow(
 @Preview
 fun ProfileScreenPreview(){
     var navController = rememberNavController()
-    ProfileScreen(navController, userId = 1 )
+    ProfileScreen(navController, userId = "1" )
 }

@@ -113,7 +113,7 @@ fun CardLichSuChuyenTien(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = "+${formatCurrency(chuyenTien.so_tien)}",
+                    text = "+${formatCurrency(chuyenTien.so_tien!!)}",
                     color = Color(0xFF1B5E20),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
@@ -128,7 +128,7 @@ fun CardLichSuChuyenTien(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = formatDayDisplay(chuyenTien.ngay_chuyen),
+                    text = formatDayDisplay(chuyenTien.ngay_chuyen!!),
                     color = Color(0xFF757575),
                     fontSize = 12.sp
                 )
@@ -154,10 +154,10 @@ fun CardLichSuChuyenTien(
 fun CardLichSuChuyenTienPreview(){
 
     val chuyenTienModel = ChuyenTienModel(
-        id = 1,
-        id_nguoidung = 1,
-        id_taikhoan_nguon = 1,
-        id_taikhoan_dich = 2,
+        id = "1",
+        id_nguoidung = "1",
+        id_taikhoan_nguon = "1",
+        id_taikhoan_dich = "2",
         so_tien = 100000,
         ngay_chuyen = "2025-09-11",
         ghi_chu = "Chuyển vào tài khoản mua xe",

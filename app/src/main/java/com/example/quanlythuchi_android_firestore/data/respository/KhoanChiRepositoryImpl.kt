@@ -2,7 +2,6 @@ package com.example.quanlythuchi_android_firestore.data.respository
 
 import android.util.Log
 import com.example.quanlythuchi_android_firestore.Utils.getStartAndEndOfMonth
-import com.example.quanlythuchi_android_firestore.data.remote.KhoanChiApiService
 import com.example.quanlythuchi_android_firestore.data.remote.dto.BaseResponse
 import com.example.quanlythuchi_android_firestore.data.remote.dto.BaseResponseMes
 import com.example.quanlythuchi_android_firestore.data.remote.dto.StatusResponse
@@ -16,7 +15,6 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class KhoanChiRepositoryImpl @Inject constructor(
-    private val firestore: FirebaseFirestore
 ) : KhoanChiRepository {
 
     private val db = Firebase.firestore
@@ -98,7 +96,7 @@ class KhoanChiRepositoryImpl @Inject constructor(
             val docRef = collection.document()
             val data = hashMapOf(
                 "id" to docRef.id,
-                "ten_khoanchi" to khoanchi.id_nguoidung,
+                "ten_khoanchi" to khoanchi.ten_khoanchi,
                 "id_nguoidung" to khoanchi.id_nguoidung,
                 "so_tien_du_kien" to khoanchi.so_tien_du_kien,
                 "ngay_batdau" to khoanchi.ngay_batdau,

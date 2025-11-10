@@ -19,29 +19,29 @@ class TaiKhoanViewModel @Inject constructor(
     private val repo: TaiKhoanRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<List<TaiKhoanModel>>>(UiState.Loading)
-    val uiState: StateFlow<UiState<List<TaiKhoanModel>>> = _uiState
+    private val _loadTaiKhoanState = MutableStateFlow<UiState<List<TaiKhoanModel>>>(UiState.Loading)
+    val loadtaikhoanState: StateFlow<UiState<List<TaiKhoanModel>>> = _loadTaiKhoanState
 
     // State để theo dõi quá trình tạo tài khoản
     private val _createTaiKhoanState = MutableStateFlow<UiState<BaseResponseMes<TaiKhoanModel>>>(UiState.Loading)
     val createTaiKhoanState: StateFlow<UiState<BaseResponseMes<TaiKhoanModel>>> = _createTaiKhoanState
 
-    private val _updateTaiKhoanState = MutableStateFlow<UiState<BaseResponseMes<TaiKhoanModel>>>(UiState.Loading)
-    val updateTaiKhoanState: StateFlow<UiState<BaseResponseMes<TaiKhoanModel>>> = _updateTaiKhoanState
+    private val _updateTaiKhoanState = MutableStateFlow<UiState<StatusResponse>>(UiState.Loading)
+    val updateTaiKhoanState: StateFlow<UiState<StatusResponse>> = _updateTaiKhoanState
     private val _deleteTaiKhoanState = MutableStateFlow<UiState<StatusResponse>>(UiState.Loading)
     val deleteKhoanState: StateFlow<UiState<StatusResponse>> = _deleteTaiKhoanState
 
     private val _chuyentienTaiKhoanState = MutableStateFlow<UiState<StatusResponse>>(UiState.Loading)
     val chuyentienTaiKhoanState: StateFlow<UiState<StatusResponse>> = _chuyentienTaiKhoanState
 
-    fun loadTaiKhoans(userId: Int) {
+    fun loadTaiKhoans(userId: String) {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            _loadTaiKhoanState.value = UiState.Loading
             try {
                 val result = repo.getTaiKhoanNguoiDung(userId)
-                _uiState.value = UiState.Success(result)
+                _loadTaiKhoanState.value = UiState.Success(result)
             } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
+                _loadTaiKhoanState.value = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
             }
         }
     }
@@ -50,7 +50,7 @@ class TaiKhoanViewModel @Inject constructor(
         viewModelScope.launch {
             _createTaiKhoanState.value = UiState.Loading
             try {
-                val response = repo.createaTaiKhoan(taiKhoan)
+                val response = repo.createTaiKhoan(taiKhoan)
                 _createTaiKhoanState.value = UiState.Success(response)
                 // Sau khi tạo thành công, reload danh sách
                 loadTaiKhoans(taiKhoan.id_nguoidung)
@@ -60,11 +60,11 @@ class TaiKhoanViewModel @Inject constructor(
         }
     }
 
-    fun updateTaiKhoan(taiKhoan: TaiKhoanModel, id: Int) {
+    fun updateTaiKhoan(taiKhoan: TaiKhoanModel) {
         viewModelScope.launch {
             _updateTaiKhoanState.value = UiState.Loading
             try {
-                val response = repo.updateTaiKhoan(taiKhoan, id)
+                val response = repo.updateTaiKhoan(taiKhoan)
                 _updateTaiKhoanState.value = UiState.Success(response)
                 // Reload danh sách sau khi update thành công
                 loadTaiKhoans(taiKhoan.id_nguoidung)
@@ -86,7 +86,7 @@ class TaiKhoanViewModel @Inject constructor(
         }
     }
 
-    fun deleteTaiKhoan(id:Int){
+    fun deleteTaiKhoan(id: String){
         viewModelScope.launch {
             _deleteTaiKhoanState.value = UiState.Loading
             try {

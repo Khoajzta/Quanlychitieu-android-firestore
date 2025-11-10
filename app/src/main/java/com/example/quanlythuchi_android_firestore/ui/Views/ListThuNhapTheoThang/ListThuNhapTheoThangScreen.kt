@@ -38,7 +38,7 @@ import java.time.LocalDate
 @Composable
 fun ListThuNhapTheoThangScreen(
     navController: NavController,
-    userId: Int,
+    userId: String,
     thuNhapViewModel: ThuNhapViewModel = hiltViewModel()
 ){
 

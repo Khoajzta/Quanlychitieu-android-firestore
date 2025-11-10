@@ -59,12 +59,15 @@ import com.example.quanlythuchi_android_firestore.Utils.formatCurrency
 import com.example.quanlythuchi_android_firestore.Utils.formatDateToDB
 import com.example.quanlythuchi_android_firestore.Utils.formatMillisToDB
 import com.example.quanlythuchi_android_firestore.Utils.formatMillisToDBFirebase
+import com.example.quanlythuchi_android_firestore.Utils.tinhTongTheoTuanVaNgay
+//import com.example.quanlythuchi_android_firestore.Utils.tinhTongTheoTuanVaNgay
 import com.example.quanlythuchi_android_firestore.ViewModels.KhoanChiViewModel
 import com.example.quanlythuchi_android_firestore.Views.home.components.BottomNavigationBar
 import com.example.quanlythuchi_android_firestore.Views.home.components.HeaderMain
 import com.example.quanlythuchi_android_firestore.data.local.Notification.NotificationReceiver
 import com.example.quanlythuchi_android_firestore.domain.model.ChiTieuModel
 import com.example.quanlythuchi_android_firestore.domain.model.KhoanChiModel
+import com.example.quanlythuchi_android_firestore.domain.model.NguoiDungModel
 import com.example.quanlythuchi_android_firestore.domain.model.ThongKeChiTieuModel
 import com.example.quanlythuchi_android_firestore.domain.model.ThuNhapModel
 import com.example.quanlythuchi_android_firestore.ui.ViewModels.ChiTieuViewModel
@@ -89,352 +92,335 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-//@OptIn(ExperimentalMaterialApi::class)
-//@Composable
-//fun HomeScreen(
-//    userId: Int,
-//    navController: NavController,
-//    khoanChiViewModel: KhoanChiViewModel = hiltViewModel(),
-//    taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel(),
-//    nguoidungViewModel: NguoiDungViewModel = hiltViewModel(),
-//    thuNhapViewModel: ThuNhapViewModel = hiltViewModel(),
-//    chiTieuViewModel: ChiTieuViewModel = hiltViewModel()
-//) {
-//    //========================= STATES ==========================================
-//    val khoanChiState by khoanChiViewModel.loadtheothang.collectAsState()
-//    val taiKhoanState by taiKhoanViewModel.uiState.collectAsState()
-//    val thuNhapState by thuNhapViewModel.uiState.collectAsState()
-//    val thuNhapTruocState by thuNhapViewModel.uiStateTheoThangTruoc.collectAsState()
-//    val chiTieuState by chiTieuViewModel.uiStateTheoThang.collectAsState()
-//    val chiTieuTruocState by chiTieuViewModel.uiStateTheoThangTruoc.collectAsState()
-//    val nguoiDungState = nguoidungViewModel.getByIdState
-//
-////========================= NGÀY THÁNG HIỆN TẠI ==============================
-//    val currentDate = LocalDate.now()
-//    val currentMonth = currentDate.monthValue
-//    val currentYear = currentDate.year
-//
-//    val previousMonth = if (currentMonth == 1) 12 else currentMonth - 1
-//    val previousYear = if (currentMonth == 1) currentYear - 1 else currentYear
-//
-//
-////========================= TẢI DỮ LIỆU =====================================
-//    LaunchedEffect(userId) {
-//        if (userId > 0) {
-//
-//            suspend fun loadAll() {
-//                // Load dữ liệu hiện tại
-//                khoanChiViewModel.loadKhoanChiTheoThang(userId, currentMonth, currentYear)
-//                taiKhoanViewModel.loadTaiKhoans(userId)
-//                nguoidungViewModel.getNguoiDungByID(userId)
-//
-//                // Kiểm tra nếu tuần hiện tại bắt đầu ở tháng trước → load thêm dữ liệu tháng trước
-//                val startOfWeek = currentDate.with(java.time.DayOfWeek.MONDAY)
-//                val isCrossMonth = startOfWeek.monthValue != currentMonth
-//
-//                // Load chi tiêu & thu nhập
-//                thuNhapViewModel.getThuNhapTheoThang(userId, currentMonth, currentYear)
-//                chiTieuViewModel.getChiTieuTheoThangVaNam(userId, currentMonth, currentYear)
-//
-//                if (isCrossMonth) {
-//                    thuNhapViewModel.getThuNhapTheoThangTruoc(userId, previousMonth, previousYear)
-//                    chiTieuViewModel.getChiTieuTheoThangTruoc(userId, previousMonth, previousYear)
-//                }
-//
-//
-//            }
-//
-//            // Lần đầu load
-//            loadAll()
-//
-//            // Cập nhật định kỳ mỗi 15 phút
-//            while (true) {
-//                delay(15 * 60 * 1000L)
-//                loadAll()
-//            }
-//        }
-//    }
-//
-//
-////========================= CHUYỂN UI STATE SANG LIST =======================
-//    val khoanChiList = (khoanChiState as? UiState.Success)?.data ?: emptyList()
-//    val taiKhoanList = (taiKhoanState as? UiState.Success)?.data ?: emptyList()
-//
-//    val thuNhapListTotal = ((thuNhapState as? UiState.Success)?.data ?: emptyList())
-//    val thuNhapTruocList = ((thuNhapTruocState as? UiState.Success)?.data ?: emptyList())
-//    val chiTieuListTotal = ((chiTieuState as? UiState.Success)?.data ?: emptyList())
-//    val chiTieuTruocList = ((chiTieuTruocState as? UiState.Success)?.data ?: emptyList())
-//
-//    Log.d("chiTieuTruocList", "thuNhapTruocList: $thuNhapTruocList")
-//    Log.d("chiTieuTruocList", "chiTieuTruocList: $chiTieuTruocList")
-//
-//
-//// Lấy top 5 khoản chi có nhiều chi tiêu nhất
-//    val top5KhoanChi = khoanChiList
-//        .sortedByDescending { it.so_luong_chi_tieu }
-//        .take(5)
-//
-//// 5 thu nhập gần nhất
-//    val thuNhapList = thuNhapListTotal
-//        .sortedByDescending { it.ngay_tao }
-//        .take(5)
-//
-//// 5 chi tiêu gần nhất
-//    val chiTieuList = chiTieuListTotal
-//        .sortedByDescending { it.ngay_tao }
-//        .take(5)
-//
-//// Tính tổng tiền
-//    val tongThuNhap = thuNhapListTotal.sumOf { it.so_tien }
-//    val tongChiTieu = chiTieuListTotal.sumOf { it.so_tien }
-//    val tongTienDuKien = khoanChiList.sumOf { it.so_tien_du_kien }
-//
-//// Tính dữ liệu biểu đồ
-//    val (data, dates) = tinhTongTheoTuanVaNgay(
-//        chiTieuListTotal + chiTieuTruocList,
-//        thuNhapListTotal + thuNhapTruocList
-//    )
-//
-//
-//
-//    //========================= REFRESH =========================================
-//    var isRefreshing by remember { mutableStateOf(false) }
-//    val coroutineScope = rememberCoroutineScope()
-//
-//    val refreshState = rememberPullRefreshState(
-//        refreshing = isRefreshing,
-//        onRefresh = {
-//            coroutineScope.launch {
-//                isRefreshing = true
-//                khoanChiViewModel.loadKhoanChi(userId)
-//                taiKhoanViewModel.loadTaiKhoans(userId)
-//                delay(500)
-//                isRefreshing = false
-//            }
-//        }
-//    )
-//
-//    //========================= HEADER ẨN HIỆN ==================================
-//    val listState = rememberLazyListState()
-//    var previousOffset by remember { mutableStateOf(0) }
-//    var targetHeight by remember { mutableStateOf(100.dp) }
-//
-//    LaunchedEffect(listState.firstVisibleItemScrollOffset) {
-//        val currentOffset = listState.firstVisibleItemScrollOffset
-//        if (currentOffset > previousOffset + 5) targetHeight = 0.dp
-//        else if (currentOffset < previousOffset - 5) targetHeight = 100.dp
-//        previousOffset = currentOffset
-//    }
-//
-//    val animatedHeight by animateDpAsState(targetHeight, label = "")
-//
-//    //========================= GIAO DIỆN =======================================
-//    Scaffold(
-//        containerColor = BackgroundColor,
-//        topBar = {
-//            AnimatedVisibility(visible = animatedHeight > 0.dp) {
-//                Box(
-//                    Modifier
-//                        .height(animatedHeight)
-//                        .fillMaxWidth()
-//                        .windowInsetsPadding(WindowInsets.statusBars)
-//                ) {
-//                    when (nguoiDungState) {
-//                        is UiState.Success ->
-//                            HeaderMain(Modifier.fillMaxSize(), user = nguoiDungState.data.data!!)
-//                        is UiState.Error ->
-//                            Text("Lỗi: ${nguoiDungState.message}")
-//                        else -> {}
-//                    }
-//                }
-//            }
-//        },
-//        contentWindowInsets = WindowInsets(0, 0, 0, 0)
-//    ) { innerPadding ->
-//
-//        Box(
-//            Modifier
-//                .padding(innerPadding)
-//                .fillMaxSize()
-//                .pullRefresh(refreshState)
-//                .padding(PaddingBody),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            val allLoaded =
-//                khoanChiState is UiState.Success &&
-//                        taiKhoanState is UiState.Success &&
-//                        thuNhapState is UiState.Success &&
-//                        chiTieuState is UiState.Success
-//
-//            if (allLoaded) {
-//                LazyColumn(
-//                    state = listState,
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .background(Color(0xFFC7E6F6)),
-//                    horizontalAlignment = Alignment.CenterHorizontally,
-//                    verticalArrangement = Arrangement.spacedBy(10.dp)
-//                ) {
-//                    // Tổng quan tài khoản
-//                    item {
-//                        CardTaiKhoanRow(
-//                            listTaiKhoan = taiKhoanList,
-//                            tongTienDuKien = tongTienDuKien,
-//                            tongThuNhap = tongThuNhap,
-//                            tongChiTieu = tongChiTieu
-//                        )
-//                    }
-//
-//
-//
-//                    item { FunctionRow(navController, userId) }
-//
-//                    // Biểu đồ thống kê
-//                    if (thuNhapListTotal.isNotEmpty() || chiTieuListTotal.isNotEmpty()) {
-//                        item {
-//                            BarChartColumn(data = data, dates = dates)
-//                        }
-//                    }
-//
-//                    // Khoản chi
-//                    item {
-//                        if (khoanChiList.isEmpty()) {
-//                            CustomButton(
-//                                title = "Thêm khoản chi",
-//                                icon = Icons.Default.AddCircle,
-//                                onClick = { navController.navigate(Screen.AddKhoanChi.createRoute(userId)) },
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
-//                        } else {
-//                            KhoanChiMoreRow(modifier = Modifier.padding(horizontal = 10.dp), navController = navController, userId = userId)
-//                            KhoanChiColumn(top5KhoanChi)
-//                        }
-//                    }
-//
-//                    // Thu nhập
-//                    if (thuNhapList.isNotEmpty()) {
-//                        item { HomeThuNhapColumn(navController,userId,thuNhapList) }
-//                    }
-//
-//                    // Chi tiêu
-//                    if (chiTieuList.isNotEmpty()) {
-//                        item { HomeChiTieuColumn(navController,userId,chiTieuList) }
-//                    }
-//
-//                    item { Spacer(Modifier.height(200.dp)) }
-//
-//                }
-//
-//                PullRefreshIndicator(
-//                    refreshing = isRefreshing,
-//                    state = refreshState,
-//                    modifier = Modifier
-//                        .padding(top = 40.dp)
-//                        .align(Alignment.TopCenter)
-//                )
-//            } else {
-//                DotLoading(Modifier.align(Alignment.Center))
-//            }
-//
-//            BottomNavigationBar(
-//                navController = navController,
-//                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
-//                userId = userId
-//            )
-//        }
-//    }
-//}
-
-
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
+    userId: String,
     navController: NavController,
-    userId: Int,
-    chiTieuViewModel: ChiTieuViewModel = hiltViewModel(),
     khoanChiViewModel: KhoanChiViewModel = hiltViewModel(),
-    thuNhapViewModel: ThuNhapViewModel = hiltViewModel()
-){
+    taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel(),
+    nguoidungViewModel: NguoiDungViewModel = hiltViewModel(),
+    thuNhapViewModel: ThuNhapViewModel = hiltViewModel(),
+    chiTieuViewModel: ChiTieuViewModel = hiltViewModel()
+) {
+    //========================= STATES ==========================================
+    val khoanChiState by khoanChiViewModel.loadtheothang.collectAsState()
+    val taiKhoanState by taiKhoanViewModel.loadtaikhoanState.collectAsState()
+    val thuNhapState by thuNhapViewModel.getByThangVaNamState.collectAsState()
+    val thuNhapTruocState by thuNhapViewModel.getByThangTruocState.collectAsState()
+    val chiTieuState by chiTieuViewModel.getByThangVaNamState.collectAsState()
+    val chiTieuTruocState by chiTieuViewModel.getByThangVaNamTruocState.collectAsState()
+    val nguoiDungState by nguoidungViewModel.getByIdState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        thuNhapViewModel.getThuNhapTheoThangVaNam("23", 11, 2025)
-        thuNhapViewModel.thongKeTheoNam("23",2025)
+//========================= NGÀY THÁNG HIỆN TẠI ==============================
+    val currentDate = LocalDate.now()
+    val currentMonth = currentDate.monthValue
+    val currentYear = currentDate.year
+
+//========================= TẢI DỮ LIỆU =====================================
+    LaunchedEffect(userId) {
+        taiKhoanViewModel.loadTaiKhoans(userId)
+        nguoidungViewModel.getNguoiDungByID(userId)
+        khoanChiViewModel.getKhoanChiTheThangVaNam(userId, currentMonth, currentYear)
+
+        // Kiểm tra nếu tuần hiện tại bắt đầu ở tháng trước → load thêm dữ liệu tháng trước
+        val startOfWeek = currentDate.with(java.time.DayOfWeek.MONDAY)
+        val isCrossMonth = startOfWeek.monthValue != currentMonth
+
+        // Load chi tiêu & thu nhập
+        thuNhapViewModel.getThuNhapTheoThangVaNam(userId, currentMonth, currentYear)
+        chiTieuViewModel.getChiTieuTheoThangVaNam(userId, currentMonth, currentYear)
+
+        if (isCrossMonth) {
+            thuNhapViewModel.getThuNhapTheoThangTruoc(userId)
+            chiTieuViewModel.getChiTieuTheoThangTruoc(userId)
+        }
     }
 
-    val thunhapstate by thuNhapViewModel.getByThangVaNamState.collectAsState()
-    val thunhap by thuNhapViewModel.thongKeTheoNamState.collectAsState()
 
-    when(val statethunhap = thunhapstate) {
-        is UiState.Success -> {
-            Log.d("HomeScreen", "thu nhạp: ${statethunhap.data}")
+//========================= CHUYỂN UI STATE SANG LIST =======================
+    val khoanChiList = (khoanChiState as? UiState.Success)?.data ?: emptyList()
+    val taiKhoanList = (taiKhoanState as? UiState.Success)?.data ?: emptyList()
+
+    val thuNhapListTotal = ((thuNhapState as? UiState.Success)?.data ?: emptyList())
+    val thuNhapTruocList = ((thuNhapTruocState as? UiState.Success)?.data ?: emptyList())
+    val chiTieuListTotal = ((chiTieuState as? UiState.Success)?.data ?: emptyList())
+    val chiTieuTruocList = ((chiTieuTruocState as? UiState.Success)?.data ?: emptyList())
+
+    Log.d("chiTieuTruocList", "thuNhapTruocList: $thuNhapTruocList")
+    Log.d("chiTieuTruocList", "chiTieuTruocList: $chiTieuTruocList")
+
+
+// Lấy top 5 khoản chi có nhiều chi tiêu nhất
+    val top5KhoanChi = khoanChiList
+        .sortedByDescending { it.so_luong_chi_tieu }
+        .take(5)
+
+// 5 thu nhập gần nhất
+    val thuNhapList = thuNhapListTotal
+        .sortedByDescending { it.ngay_tao }
+        .take(5)
+
+// 5 chi tiêu gần nhất
+    val chiTieuList = chiTieuListTotal
+        .sortedByDescending { it.ngay_tao }
+        .take(5)
+
+// Tính tổng tiền
+    val tongThuNhap = thuNhapList.sumOf { it.so_tien!! }
+    val tongChiTieu = chiTieuListTotal.sumOf { it.so_tien!! }
+    val tongTienDuKien = khoanChiList.sumOf { it.so_tien_du_kien!! }
+
+    Log.d("tong thu nhap", tongThuNhap.toString())
+    Log.d("tong chi tieu", tongChiTieu.toString())
+
+// Tính dữ liệu biểu đồ
+    val (data, dates) = tinhTongTheoTuanVaNgay(
+        chiTieuListTotal + chiTieuTruocList,
+        thuNhapListTotal + thuNhapTruocList
+    )
+
+
+
+    //========================= REFRESH =========================================
+    var isRefreshing by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
+    val refreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = {
+            coroutineScope.launch {
+                isRefreshing = true
+                khoanChiViewModel.getKhoanChiTheThangVaNam(userId, currentMonth, currentYear)
+                taiKhoanViewModel.loadTaiKhoans(userId)
+                delay(500)
+                isRefreshing = false
+            }
         }
-        is UiState.Error -> {
-            Log.d("HomeScreen", "Error: ${statethunhap.message}")
-        }
-        else -> {
-            DotLoading()
-        }
+    )
+
+    //========================= HEADER ẨN HIỆN ==================================
+    val listState = rememberLazyListState()
+    var previousOffset by remember { mutableStateOf(0) }
+    var targetHeight by remember { mutableStateOf(100.dp) }
+
+    LaunchedEffect(listState.firstVisibleItemScrollOffset) {
+        val currentOffset = listState.firstVisibleItemScrollOffset
+        if (currentOffset > previousOffset + 5) targetHeight = 0.dp
+        else if (currentOffset < previousOffset - 5) targetHeight = 100.dp
+        previousOffset = currentOffset
     }
 
+    val animatedHeight by animateDpAsState(targetHeight, label = "")
+
+    //========================= GIAO DIỆN =======================================
     Scaffold(
+        containerColor = BackgroundColor,
+        topBar = {
+            AnimatedVisibility(visible = animatedHeight > 0.dp) {
+                Box(
+                    Modifier
+                        .height(animatedHeight)
+                        .fillMaxWidth()
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                ) {
+                    when (nguoiDungState) {
+                        is UiState.Success ->
 
+                            HeaderMain(Modifier.fillMaxSize(), user = (nguoiDungState as UiState.Success<NguoiDungModel>).data!!)
+                        is UiState.Error ->
+                            Text("Lỗi: ${(nguoiDungState as UiState.Error).message}")
+                        else -> {}
+                    }
+                }
+            }
+        },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { innerPadding ->
-        Column(
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+
+        Box(
+            Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .pullRefresh(refreshState)
+                .padding(PaddingBody),
+            contentAlignment = Alignment.Center
         ) {
+            val allLoaded =
+                khoanChiState is UiState.Success &&
+                        taiKhoanState is UiState.Success &&
+                        thuNhapState is UiState.Success &&
+                        chiTieuState is UiState.Success
+
+            if (allLoaded) {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFC7E6F6)),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    // Tổng quan tài khoản
+                    item {
+                        CardTaiKhoanRow(
+                            listTaiKhoan = taiKhoanList,
+                            tongTienDuKien = tongTienDuKien,
+                            tongThuNhap = tongThuNhap,
+                            tongChiTieu = tongChiTieu
+                        )
+                    }
 
 
-            Button(
-                onClick = {
-                    val thunhap = ThuNhapModel(
-                        id = "123",
-                        id_nguoidung = "23",
-                        id_taikhoan = "123",
-                        so_tien = 20000000,
-                        ngay_tao = "2025-11-01",
-                        ghi_chu = "Thu nhập"
-                    )
 
-                    thuNhapViewModel.createThuNhap(thunhap)
+                    item { FunctionRow(navController, userId) }
+
+                    // Biểu đồ thống kê
+                    if (thuNhapListTotal.isNotEmpty() || chiTieuListTotal.isNotEmpty()) {
+                        item {
+                            BarChartColumn(data = data, dates = dates)
+                        }
+                    }
+
+                    // Khoản chi
+                    item {
+                        if (khoanChiList.isEmpty()) {
+                            CustomButton(
+                                title = "Thêm khoản chi",
+                                icon = Icons.Default.AddCircle,
+                                onClick = { navController.navigate(Screen.AddKhoanChi.createRoute(userId)) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        } else {
+                            KhoanChiMoreRow(modifier = Modifier.padding(horizontal = 10.dp), navController = navController, userId = userId)
+                            KhoanChiColumn(top5KhoanChi)
+                        }
+                    }
+
+                    // Thu nhập
+                    if (thuNhapList.isNotEmpty()) {
+                        item { HomeThuNhapColumn(navController,userId,thuNhapList) }
+                    }
+
+                    // Chi tiêu
+                    if (chiTieuList.isNotEmpty()) {
+                        item { HomeChiTieuColumn(navController,userId,chiTieuList) }
+                    }
+
+                    item { Spacer(Modifier.height(200.dp)) }
+
                 }
-            ) {
-                Text("Thêm")
+
+                PullRefreshIndicator(
+                    refreshing = isRefreshing,
+                    state = refreshState,
+                    modifier = Modifier
+                        .padding(top = 40.dp)
+                        .align(Alignment.TopCenter)
+                )
+            } else {
+                DotLoading(Modifier.align(Alignment.Center))
             }
 
-            Button(
-                onClick = {
-                    val testKhoanChi = KhoanChiModel(
-                        id = "zkS6nmXkMs9XcqzJjkfp",
-                        ten_khoanchi = "Ăn uống",
-                        id_nguoidung = "23",
-                        so_tien_du_kien = 20000,
-                        ngay_batdau = "2025-11-01",
-                        ngay_ketthuc = "2025-11-30",
-                        mausac = "#FF5733",
-                        emoji = "🍔",
-                        so_luong_chi_tieu = 0,
-                        tong_tien_da_chi = 0
-                    )
-                    khoanChiViewModel.updateKhoanChi(testKhoanChi)
-
-                }
-            ) {
-                Text("Sửa")
-            }
-
-            Button(
-                onClick = {
-                    thuNhapViewModel.deleteThuNhap(id = "byjUwk2dCzBqqwE9WDVw")
-                }
-            ) {
-                Text("Xóa")
-            }
+            BottomNavigationBar(
+                navController = navController,
+                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
+                userId = userId
+            )
         }
-
     }
-
 }
+
+
+//@Composable
+//fun HomeScreen(
+//    navController: NavController,
+//    userId: String,
+//    chiTieuViewModel: ChiTieuViewModel = hiltViewModel(),
+//    khoanChiViewModel: KhoanChiViewModel = hiltViewModel(),
+//    thuNhapViewModel: ThuNhapViewModel = hiltViewModel()
+//){
+//
+//    LaunchedEffect(Unit) {
+//        thuNhapViewModel.getThuNhapTheoThangVaNam("23", 11, 2025)
+//        thuNhapViewModel.thongKeTheoNam("23",2025)
+//    }
+//
+//    val thunhapstate by thuNhapViewModel.getByThangVaNamState.collectAsState()
+//    val thunhap by thuNhapViewModel.thongKeTheoNamState.collectAsState()
+//
+//    when(val statethunhap = thunhapstate) {
+//        is UiState.Success -> {
+//            Log.d("HomeScreen", "thu nhạp: ${statethunhap.data}")
+//        }
+//        is UiState.Error -> {
+//            Log.d("HomeScreen", "Error: ${statethunhap.message}")
+//        }
+//        else -> {
+//            DotLoading()
+//        }
+//    }
+//
+//    Scaffold(
+//
+//    ) { innerPadding ->
+//        Column(
+//            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//
+//
+//            Button(
+//                onClick = {
+//                    val thunhap = ThuNhapModel(
+//                        id = "123",
+//                        id_nguoidung = "23",
+//                        id_taikhoan = "123",
+//                        so_tien = 20000000,
+//                        ngay_tao = "2025-11-01",
+//                        ghi_chu = "Thu nhập"
+//                    )
+//
+//                    thuNhapViewModel.createThuNhap(thunhap)
+//                }
+//            ) {
+//                Text("Thêm")
+//            }
+//
+//            Button(
+//                onClick = {
+//                    val testKhoanChi = KhoanChiModel(
+//                        id = "zkS6nmXkMs9XcqzJjkfp",
+//                        ten_khoanchi = "Ăn uống",
+//                        id_nguoidung = "23",
+//                        so_tien_du_kien = 20000,
+//                        ngay_batdau = "2025-11-01",
+//                        ngay_ketthuc = "2025-11-30",
+//                        mausac = "#FF5733",
+//                        emoji = "🍔",
+//                        so_luong_chi_tieu = 0,
+//                        tong_tien_da_chi = 0
+//                    )
+//                    khoanChiViewModel.updateKhoanChi(testKhoanChi)
+//
+//                }
+//            ) {
+//                Text("Sửa")
+//            }
+//
+//            Button(
+//                onClick = {
+//                    thuNhapViewModel.deleteThuNhap(id = "byjUwk2dCzBqqwE9WDVw")
+//                }
+//            ) {
+//                Text("Xóa")
+//            }
+//        }
+//
+//    }
+//
+//}
 
 
 @Composable
@@ -443,6 +429,6 @@ fun PreviewMainScreen() {
     var navController = rememberNavController()
     HomeScreen(
         navController = navController,
-        userId = 21,
+        userId = "21",
     )
 }

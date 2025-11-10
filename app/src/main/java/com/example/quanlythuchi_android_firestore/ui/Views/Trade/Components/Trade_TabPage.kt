@@ -65,7 +65,7 @@ import kotlin.math.abs
 fun TradeTabPage(
     navController: NavController,
     listKhoanChi: List<KhoanChiModel>,
-    userId: Int
+    userId: String
 ) {
     val tabs = listOf("Chi tiêu", "Thu nhập")
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
@@ -168,7 +168,7 @@ fun TradeTabPage(
 fun ChiTieuPage(
     navController: NavController,
     listKhoanChi: List<KhoanChiModel>,
-    userId:Int
+    userId: String
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(horizontal = PaddingBody),
@@ -176,12 +176,12 @@ fun ChiTieuPage(
     ) {
         itemsIndexed(listKhoanChi) { index, item ->
             CardKhoanChi(item, modifier = Modifier, onDetailClick = {
-//                navController.navigate(
-//                Screen.KhoanChiDetail.createRoute(
-//                    id_khoanChi = item.id,
-//                    userId = userId
-//                )
-//            )
+                navController.navigate(
+                Screen.KhoanChiDetail.createRoute(
+                    id_khoanChi = item.id!!,
+                    userId = userId
+                )
+            )
             })
         }
     }
@@ -191,7 +191,7 @@ fun ChiTieuPage(
 
 @Composable
 fun ThuNhapPage(
-    userId: Int,
+    userId: String,
     thuNhapViewModel: ThuNhapViewModel = hiltViewModel()
 ) {
     val thuNhapState by thuNhapViewModel.getByThangVaNamState.collectAsState()

@@ -21,7 +21,7 @@ class ChuyenTienViewModel@Inject constructor(
     private val _uiState = MutableStateFlow<UiState<List<ChuyenTienModel>>>(UiState.Loading)
     val uiState: StateFlow<UiState<List<ChuyenTienModel>>> = _uiState
 
-    fun getLichSuChuyenTienByUser(userId: Int){
+    fun getLichSuChuyenTienByUser(userId: String){
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             try {

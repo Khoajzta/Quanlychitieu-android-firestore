@@ -38,7 +38,7 @@ import java.time.LocalDate
 @Composable
 fun ListChiTieuTheoThangScreen(
     navController: NavController,
-    userId: Int,
+    userId: String,
     chiTieuViewModel: ChiTieuViewModel = hiltViewModel()
 ){
 //    val currentDate = LocalDate.now()

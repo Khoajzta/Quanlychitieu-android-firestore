@@ -26,7 +26,7 @@ import com.example.quanlythuchi_android_firestore.ui.theme.PrimaryColor
 @Composable
 fun HomeChiTieuColumn(
     navController: NavController,
-    userId:Int,
+    userId: String,
     listChiTieu :List<ChiTieuModel>
 ){
     Column {

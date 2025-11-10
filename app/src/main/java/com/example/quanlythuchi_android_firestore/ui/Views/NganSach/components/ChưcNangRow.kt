@@ -17,7 +17,7 @@ import com.example.quanlythuchi_android_firestore.ui.navigation.Screen
 fun ChucNangRow(
     modifier: Modifier = Modifier,
     navController: NavController,
-    userId:Int,
+    userId: String,
 ){
     LazyRow(
         modifier = modifier,

@@ -20,7 +20,7 @@ import com.example.quanlythuchi_android_firestore.ui.navigation.Screen
 @Composable
 fun ButtonBackToHome(
     navController: NavController,
-    userId: Int
+    userId: String
 ) {
     val context = LocalContext.current
 

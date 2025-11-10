@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.quanlythuchi_android_firestore.R
 import com.example.quanlythuchi_android_firestore.Views.login.components.ButtonLoginGoogle
 import com.example.quanlythuchi_android_firestore.ui.ViewModels.NguoiDungViewModel
@@ -52,13 +53,22 @@ fun LoginScreen(
     val alpha = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
+        // Thu nhỏ thời gian hiệu ứng scale
         scale.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 900, easing = FastOutSlowInEasing)
+            animationSpec = tween(
+                durationMillis = 500, // từ 900 → 500 (nhanh hơn ~2x)
+                easing = FastOutSlowInEasing
+            )
         )
+
+        // Làm mờ dần nhanh hơn, bắt đầu sớm hơn
         alpha.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 700, delayMillis = 300)
+            animationSpec = tween(
+                durationMillis = 400, // từ 700 → 400
+                delayMillis = 50 // từ 100 → 50
+            )
         )
     }
 
@@ -67,7 +77,7 @@ fun LoginScreen(
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color(0xFF6A11CB), Color(0xFF2575FC))
+                    listOf(Color(0xFF2B81C7), Color(0xFF3FDECF))
                 )
             )
     ) {
@@ -110,7 +120,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Chào mừng trở lại!",
+                    text = "Sẵn sàng quản lý chi tiêu nào!",
                     color = Color.White,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
@@ -125,7 +135,7 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             // Card đăng nhập
             Box(
@@ -153,7 +163,7 @@ fun LoginScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             // Footer
             Text(
@@ -170,4 +180,9 @@ fun LoginScreen(
 @Preview
 @Composable
 fun PreviewLoginScreen() {
+    val navController = rememberNavController()
+    LoginScreen(
+        navController
+    )
 }
+

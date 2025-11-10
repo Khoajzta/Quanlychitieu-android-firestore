@@ -8,5 +8,5 @@ import com.example.quanlythuchi_android_firestore.domain.model.NguoiDungModel
 interface NguoiDungRepository {
     suspend fun createNguoiDung(nguoidung: NguoiDungModel) : BaseResponse<NguoiDungModel>
     suspend fun checkEmailNguoidung(email :String): CheckEmailResponse<NguoiDungModel>
-    suspend fun getNguoiDungByID(id:Int) : BaseResponseMes<NguoiDungModel>
+    suspend fun getNguoiDungByID(id: String) : NguoiDungModel
 }

@@ -25,7 +25,7 @@ import com.example.quanlythuchi_android_firestore.ui.theme.PrimaryColor
 @Composable
 fun HomeThuNhapColumn(
     navController: NavController,
-    userId : Int,
+    userId : String,
     listThuNhap : List<ThuNhapModel>
 ){
     Column {

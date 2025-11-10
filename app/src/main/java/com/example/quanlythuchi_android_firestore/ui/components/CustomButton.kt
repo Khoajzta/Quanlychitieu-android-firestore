@@ -2,11 +2,8 @@ package com.example.quanlythuchi_android_firestore.Components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -19,7 +16,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.quanlythuchi_android_firestore.ui.theme.Dimens.PaddingBody
 import com.example.quanlythuchi_android_firestore.ui.theme.Dimens.RadiusLarge
 import com.example.quanlythuchi_android_firestore.ui.theme.PrimaryColor
 
@@ -29,11 +25,12 @@ fun CustomButton(
     onClick: () -> Unit = {},
     title: String,
     icon : ImageVector? = null,
+    tralingIcon: ImageVector? = null,
     containerColor : Color = PrimaryColor
 ){
     Button(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.height(50.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor
         ),
@@ -58,6 +55,14 @@ fun CustomButton(
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold
             )
+
+            if(tralingIcon!=null){
+                Icon(
+                    tralingIcon,
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
         }
     }
 }

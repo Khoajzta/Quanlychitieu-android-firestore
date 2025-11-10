@@ -41,7 +41,7 @@ import com.example.quanlythuchi_android_firestore.ui.components.Header
 @Composable
 fun LichSuChuyenTienScreen(
     navController: NavController,
-    userId: Int,
+    userId: String,
     chuyenTienViewModel: ChuyenTienViewModel = hiltViewModel()
 ) {
     val loadLichSuChuyenTienUIState by chuyenTienViewModel.uiState.collectAsState()
@@ -53,7 +53,9 @@ fun LichSuChuyenTienScreen(
     val isRefreshing = loadLichSuChuyenTienUIState is UiState.Loading
     val refreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { chuyenTienViewModel.getLichSuChuyenTienByUser(userId) }
+        onRefresh = {
+            chuyenTienViewModel.getLichSuChuyenTienByUser(userId)
+        }
     )
 
     Scaffold(

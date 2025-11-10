@@ -29,8 +29,11 @@ class ChiTieuViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<UiState<List<ChiTieuModel>>>(UiState.Loading)
     val uiState: StateFlow<UiState<List<ChiTieuModel>>> = _uiState
 
-    private val _getByThangVaNamiState = MutableStateFlow<UiState<List<ChiTieuModel>>>(UiState.Loading)
-    val getByThangVaNam: StateFlow<UiState<List<ChiTieuModel>>> = _getByThangVaNamiState
+    private val _getByThangVaNamState = MutableStateFlow<UiState<List<ChiTieuModel>>>(UiState.Loading)
+    val getByThangVaNamState: StateFlow<UiState<List<ChiTieuModel>>> = _getByThangVaNamState
+
+    private val _getByThangVaNamTruocState = MutableStateFlow<UiState<List<ChiTieuModel>>>(UiState.Loading)
+    val getByThangVaNamTruocState: StateFlow<UiState<List<ChiTieuModel>>> = _getByThangVaNamTruocState
 
     private val _thongKeState = MutableStateFlow<UiState<List<ThongKeChiTieuModel>>>(UiState.Loading)
     val thongKeState: StateFlow<UiState<List<ThongKeChiTieuModel>>> = _thongKeState
@@ -104,7 +107,7 @@ class ChiTieuViewModel @Inject constructor(
 
 
     // 🟡 Lấy chi tiêu theo khoản chi và người dùng
-    fun getChiTieuTheoKhoanChiCuaNguoiDung(idKhoanChi: Int, userId: String) {
+    fun getChiTieuTheoKhoanChiCuaNguoiDung(idKhoanChi: String, userId: String) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             try {
@@ -125,32 +128,32 @@ class ChiTieuViewModel @Inject constructor(
     // 🔵 Lấy chi tiêu theo tháng và năm
     fun getChiTieuTheoThangVaNam(userId: String, thang: Int, nam: Int) {
         viewModelScope.launch {
-            _getByThangVaNamiState.value = UiState.Loading
+            _getByThangVaNamState.value = UiState.Loading
             try {
                 val response = repository.getChiTieuTheoThangVaNam(userId, thang, nam)
                 if (response.isNotEmpty()) {
-                    _getByThangVaNamiState.value = UiState.Success(response)
+                    _getByThangVaNamState.value = UiState.Success(response)
                 } else {
-                    _getByThangVaNamiState.value = UiState.Success(emptyList()) // để không crash
+                    _getByThangVaNamState.value = UiState.Success(emptyList()) // để không crash
                 }
             } catch (e: Exception) {
-                _getByThangVaNamiState.value = UiState.Error(e.message ?: "Lỗi không xác định")
+                _getByThangVaNamState.value = UiState.Error(e.message ?: "Lỗi không xác định")
             }
         }
     }
 
     fun getChiTieuTheoThangTruoc(userId: String) {
         viewModelScope.launch {
-            _getByThangVaNamiState.value = UiState.Loading
+            _getByThangVaNamTruocState.value = UiState.Loading
             try {
                 val response = repository.getChiTieuTheoThangVaNam(userId, ngaytruoc.monthValue, ngaytruoc.year)
                 if (response.isNotEmpty()) {
-                    _getByThangVaNamiState.value = UiState.Success(response)
+                    _getByThangVaNamTruocState.value = UiState.Success(response)
                 } else {
-                    _getByThangVaNamiState.value = UiState.Success(emptyList()) // để không crash
+                    _getByThangVaNamTruocState.value = UiState.Success(emptyList()) // để không crash
                 }
             } catch (e: Exception) {
-                _getByThangVaNamiState.value = UiState.Error(e.message ?: "Lỗi không xác định")
+                _getByThangVaNamTruocState.value = UiState.Error(e.message ?: "Lỗi không xác định")
             }
         }
     }

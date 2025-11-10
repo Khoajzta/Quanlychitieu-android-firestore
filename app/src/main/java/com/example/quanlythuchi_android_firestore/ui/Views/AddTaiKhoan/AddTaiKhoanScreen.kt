@@ -54,7 +54,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun AddTaiKhoanScreen(
     navController: NavController,
-    userId: Int,
+    userId: String,
     taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel()
 ) {
     var tenTaiKhoan by remember { mutableStateOf("") }
@@ -157,7 +157,7 @@ fun AddTaiKhoanScreen(
                             else -> {
                                 taiKhoanViewModel.createTaiKhoan(
                                     TaiKhoanModel(
-                                        id = 0,
+                                        id = "",
                                         ten_taikhoan = tenTaiKhoan,
                                         mo_ta = moTa,
                                         so_du = 0L,

@@ -14,7 +14,6 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ThuNhapRepositoryImpl @Inject constructor(
-    private val firestore: FirebaseFirestore
 ) : ThuNhapRepository {
     private val db = Firebase.firestore
     private val collection = db.collection("thunhap")

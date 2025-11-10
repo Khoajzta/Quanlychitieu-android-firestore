@@ -23,7 +23,7 @@ fun Header(
     navController: NavController,
     modifier: Modifier = Modifier,
     title: String,
-    userId: Int = 1
+    userId: String = ""
 ) {
     Row(
         modifier = modifier
@@ -53,5 +53,5 @@ fun Header(
 @Preview()
 fun TradeHeaderPreview(){
     var navController = rememberNavController()
-    Header(navController, title = "Giao dịch", userId = 1)
+    Header(navController, title = "Giao dịch", userId = "")
 }

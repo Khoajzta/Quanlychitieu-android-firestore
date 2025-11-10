@@ -106,8 +106,7 @@ fun CardTaiKhoanChinh(
                     title = "Nạp",
                     onClick = {
                         val taikhoanUpdate = taikhoan.copy(so_du = taikhoan.so_du + sotien)
-                        taiKhoanViewModel.updateTaiKhoan(taikhoanUpdate, taikhoan.id)
-                        taiKhoanViewModel.loadTaiKhoans(taikhoan.id_nguoidung)
+                        taiKhoanViewModel.updateTaiKhoan(taikhoanUpdate)
                         showDialog = false
                     },
                 )
@@ -205,7 +204,7 @@ fun CardTaiKhoanChinh(
                         color = Color.White
                     )
                     Text(
-                        text = "**** **** **** ${taikhoan.id.toString().takeLast(4)}",
+                        text = "**** **** **** ${taikhoan.id.takeLast(4)}",
                         fontSize = 14.sp,
                         letterSpacing = 2.sp,
                         color = Color.White.copy(alpha = 0.7f)
@@ -229,8 +228,8 @@ fun CardTaiKhoanChinh(
 @Preview
 fun CardTaiKhoanChinhPreview() {
     var taikhoan = TaiKhoanModel(
-        id = 1,
-        id_nguoidung = 1,
+        id = "1",
+        id_nguoidung = "1",
         ten_taikhoan = "Tài khoản chính",
         so_du = 2500000,
         loai_taikhoan = 1,

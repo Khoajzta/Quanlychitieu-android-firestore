@@ -72,7 +72,7 @@ fun AddTradeTab(
     navController: NavController,
     listKhoanChi: List<KhoanChiModel>,
     taikhoanchinh: TaiKhoanModel,
-    userId: Int
+    userId: String
 ) {
     val tabs = listOf("Chi tiêu", "Thu nhập")
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { tabs.size })
@@ -157,7 +157,7 @@ fun AddChiTieuPage(
     navController: NavController,
     listKhoanChi: List<KhoanChiModel>,
     taikhoanchinh : TaiKhoanModel,
-    userId : Int,
+    userId : String,
     chiTieuViewModel: ChiTieuViewModel = hiltViewModel()
 ) {
     var sotien by remember { mutableStateOf(0L) }
@@ -248,16 +248,16 @@ fun AddChiTieuPage(
                     }
 
                     else if (sotien != 0L && selectedDate != null && selectedKhoanChi != null && mota.isNotBlank()) {
-//                        val chiTieu = ChiTieuModel(
-//                            id = 0,
-//                            id_nguoidung = userId,
-//                            id_khoanchi = selectedKhoanChi!!.id,
-//                            id_taikhoan = taikhoanchinh.id,
-//                            so_tien = sotien,
-//                            ngay_tao = formatMillisToDB(selectedDate),
-//                            ghi_chu = mota
-//                        )
-//                        chiTieuViewModel.createChiTieu(chiTieu)
+                        val chiTieu = ChiTieuModel(
+                            id = "",
+                            id_nguoidung = userId,
+                            id_khoanchi = selectedKhoanChi!!.id,
+                            id_taikhoan = taikhoanchinh.id,
+                            so_tien = sotien,
+                            ngay_tao = formatMillisToDB(selectedDate),
+                            ghi_chu = mota
+                        )
+                        chiTieuViewModel.createChiTieu(chiTieu)
 
                         snackbarType = SnackbarType.SUCCESS
                         snackbarMessage = "Thêm chi tiêu thành công"
@@ -311,7 +311,7 @@ fun AddChiTieuPage(
 @Composable
 fun AddThuNhapPage(
     navController: NavController,
-    userId: Int,
+    userId: String,
     taikhoanchinh : TaiKhoanModel,
     thuNhapViewModel: ThuNhapViewModel = hiltViewModel()
 ) {
@@ -379,17 +379,17 @@ fun AddThuNhapPage(
                 icon = Icons.Default.AddCircle,
                 onClick = {
                     if(tenThuNhap != "" && sotien != 0L && selectedDate != null ){
-//                        var thuNhap = ThuNhapModel(
-//                            id = 0,
-//                            id_nguoidung = userId,
-//                            id_taikhoan = taikhoanchinh.id,
-//                            so_tien = sotien,
-//                            ngay_tao = formatMillisToDB(selectedDate),
-//                            ghi_chu = tenThuNhap
-//                        )
-//
-//
-//                        thuNhapViewModel.createThuNhap(thuNhap)
+                        var thuNhap = ThuNhapModel(
+                            id = "",
+                            id_nguoidung = userId,
+                            id_taikhoan = taikhoanchinh.id,
+                            so_tien = sotien,
+                            ngay_tao = formatMillisToDB(selectedDate),
+                            ghi_chu = tenThuNhap
+                        )
+
+
+                        thuNhapViewModel.createThuNhap(thuNhap)
 
                         snackbarType = SnackbarType.SUCCESS
                         snackbarMessage = "Thêm thu nhập thành công"

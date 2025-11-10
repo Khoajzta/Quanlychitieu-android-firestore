@@ -10,7 +10,7 @@ interface ChiTieuRepository {
 
 
     suspend fun getChiTieuTheoKhoanChiCuaNguoiDung(
-        id_khoanchi: Int,
+        id_khoanchi: String,
         userId: String
     ): BaseResponse<List<ChiTieuModel>>
 
