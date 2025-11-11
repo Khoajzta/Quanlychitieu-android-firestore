@@ -27,6 +27,29 @@ class NotificationReceiver : BroadcastReceiver() {
             return
         }
 
+        val userId = intent?.getStringExtra("userId") ?: return
+
+        val db = FirebaseFirestore.getInstance()
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+        db.collection("chitieu")
+            .whereEqualTo("id_nguoidung", userId)
+            .whereEqualTo("ngay", today)
+            .get()
+            .addOnSuccessListener { result ->
+                if (result.isEmpty) {
+                    Log.d("NotificationReceiver", "📭 Chưa có chi tiêu hôm nay, hiển thị thông báo.")
+                    showNotification(context)
+                } else {
+                    Log.d("NotificationReceiver", "✅ Đã có chi tiêu hôm nay, không thông báo.")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("NotificationReceiver", "❌ Lỗi khi kiểm tra chi tiêu: ${e.message}")
+            }
+    }
+
+    private fun showNotification(context: Context) {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
