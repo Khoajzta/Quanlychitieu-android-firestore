@@ -50,7 +50,7 @@ fun SplashScreen(
     val scale = remember { Animatable(0.8f) }
     val alpha = remember { Animatable(0f) }
 
-    // Hiệu ứng xuất hiện logo + text
+    // Hiệu ứng logo và chữ
     LaunchedEffect(Unit) {
         scale.animateTo(
             targetValue = 1f,
@@ -104,12 +104,11 @@ fun SplashScreen(
             // Logo + Tên ứng dụng
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .graphicsLayer(
-                        scaleX = scale.value,
-                        scaleY = scale.value,
-                        alpha = alpha.value
-                    )
+                modifier = Modifier.graphicsLayer(
+                    scaleX = scale.value,
+                    scaleY = scale.value,
+                    alpha = alpha.value
+                )
             ) {
                 Image(
                     painter = painterResource(R.drawable.icon_3),
@@ -150,12 +149,13 @@ fun SplashScreen(
                         modifier = Modifier
                             .graphicsLayer(alpha = alpha.value)
                             .fillMaxWidth(),
-                        tralingIcon = Icons.Default.ArrowForward
+                        trailingIcon = Icons.Default.ArrowForward,
                     )
                 }
                 false -> {
+                    // 🕒 Chờ 2 giây trước khi chuyển trang
                     LaunchedEffect(userId) {
-                        delay(1500)
+                        delay(2000)
                         if (userId != null) {
                             navController.navigate(Screen.Home.createRoute(userId!!)) {
                                 popUpTo(0)
@@ -170,6 +170,7 @@ fun SplashScreen(
         }
     }
 }
+
 
 
 

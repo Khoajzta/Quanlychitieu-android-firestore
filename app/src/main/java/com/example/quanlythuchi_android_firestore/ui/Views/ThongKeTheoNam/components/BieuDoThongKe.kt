@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -41,7 +42,11 @@ fun BieuDoThongKe(
     thongKeList: List<ThongKeThangModel>,
     maxValue: Float
 ) {
-    // 🎨 Shadow elevation đẹp
+    // 🧮 Lọc chỉ những tháng có thu hoặc chi > 0
+    val filteredList = remember(thongKeList) {
+        thongKeList.filter { it.tongThu > 0 || it.tongChi > 0 }
+    }
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -64,14 +69,14 @@ fun BieuDoThongKe(
                     Canvas(
                         modifier = Modifier
                             .padding(top = 10.dp)
-                            .width((thongKeList.size * (barWidth * 2 + barSpace)))
+                            .width((filteredList.size * (barWidth * 2 + barSpace)))
                             .height(chartHeight)
                     ) {
                         val barW = barWidth.toPx()
                         val space = barSpace.toPx()
                         val chartH = size.height - 60f // chừa chỗ nhãn và số tiền
 
-                        thongKeList.forEachIndexed { index, tk ->
+                        filteredList.forEachIndexed { index, tk ->
                             val chiHeight = (tk.tongChi / maxValue) * chartH
                             val thuHeight = (tk.tongThu / maxValue) * chartH
                             val xChi = index * (barW * 2 + space)
@@ -142,3 +147,4 @@ fun BieuDoThongKe(
         }
     }
 }
+

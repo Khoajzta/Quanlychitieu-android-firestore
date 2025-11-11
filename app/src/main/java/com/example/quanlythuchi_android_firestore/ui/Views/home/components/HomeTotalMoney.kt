@@ -39,6 +39,7 @@ import com.example.quanlythuchi_android_firestore.R
 import com.example.quanlythuchi_android_firestore.Utils.formatCurrency
 import com.example.quanlythuchi_android_firestore.domain.model.TaiKhoanModel
 import com.example.quanlythuchi_android_firestore.ui.theme.Dimens.RadiusXL
+import java.time.LocalDate
 
 @Composable
 fun HomeTotalMoney(
@@ -48,10 +49,14 @@ fun HomeTotalMoney(
     tongThuNhap: Long,
     tongChiTieu: Long
 ) {
+    val currentDate = LocalDate.now()
+    val currentMonth = currentDate.monthValue
+    val currentYear = currentDate.year
+
     Box(
         modifier = modifier
             .width(370.dp)
-            .height(220.dp)
+            .wrapContentHeight()
             .shadow(8.dp, RoundedCornerShape(28.dp))
             .clip(RoundedCornerShape(28.dp))
             .background(
@@ -64,16 +69,31 @@ fun HomeTotalMoney(
             .padding(18.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.wrapContentHeight(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             // 🧾 Phần trên: Tổng số dư
             Column {
-                Text(
-                    text = "Tổng số dư",
-                    color = Color.White.copy(0.7f),
-                    fontSize = 14.sp
-                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Text(
+                        text = "Tổng số dư",
+                        color = Color.White.copy(0.7f),
+                        fontSize = 14.sp
+                    )
+
+                    Text(
+                        text = "Tháng ${currentMonth} năm ${currentYear}",
+                        color = Color.White.copy(0.7f),
+                        fontSize = 14.sp
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = formatCurrency(taikhoan.so_du),

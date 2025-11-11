@@ -93,6 +93,7 @@ fun LoginScreen(
             }
         }
 
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -122,7 +123,7 @@ fun LoginScreen(
                 Text(
                     text = "Sẵn sàng quản lý chi tiêu nào!",
                     color = Color.White,
-                    fontSize = 28.sp,
+                    fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )
 

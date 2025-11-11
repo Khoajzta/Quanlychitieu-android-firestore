@@ -43,6 +43,33 @@ class TaiKhoanRepositoryImpl@Inject constructor(
         }
     }
 
+    override suspend fun getTaiKhoanChinhNguoiDung(userId: String): TaiKhoanModel {
+        return try {
+            val querySnapshot = collection
+                .whereEqualTo("id_nguoidung", userId)
+                .whereEqualTo("loai_taikhoan", 1)
+                .get()
+                .await()
+
+            // Ghi log tất cả document lấy được
+            querySnapshot.documents.forEach { doc ->
+                Log.d("Firestore", "➡️ Document ID: ${doc.id}, Data: ${doc.data}")
+            }
+
+            // Lấy document đầu tiên nếu có
+            val document = querySnapshot.documents.firstOrNull()
+                ?: throw Exception("Không tìm thấy tài khoản chính của người dùng $userId")
+
+            // Chuyển sang model
+            document.toObject(TaiKhoanModel::class.java)
+                ?: throw Exception("Lỗi chuyển đổi dữ liệu sang TaiKhoanModel")
+
+        } catch (e: Exception) {
+            Log.e("Firestore", "❌ Lỗi khi lấy tài khoản chính của người dùng $userId: ${e.message}", e)
+            throw Exception("Network/API Error: ${e.message}")
+        }
+    }
+
 
 
     override suspend fun createTaiKhoan(taikhoan: TaiKhoanModel): BaseResponseMes<TaiKhoanModel> {

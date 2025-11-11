@@ -1,30 +1,32 @@
 package com.example.quanlythuchi_android_firestore.Views.AddKhoanChi
 
-import android.text.format.DateUtils.formatDateRange
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +38,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,14 +54,15 @@ import androidx.emoji2.text.EmojiCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.example.quanlythuchi_android_firestore.Components.CusTomTextField
 import com.example.quanlythuchi_android_firestore.Components.CustomButton
-import com.example.quanlythuchi_android_firestore.Components.CustomDatePicker
-import com.example.quanlythuchi_android_firestore.Components.EmojiPickerGrid
+import com.example.quanlythuchi_android_firestore.Utils.formatCurrency
 import com.example.quanlythuchi_android_firestore.Utils.formatMillisToDB
 import com.example.quanlythuchi_android_firestore.ViewModels.KhoanChiViewModel
 import com.example.quanlythuchi_android_firestore.domain.model.KhoanChiModel
-import com.example.quanlythuchi_android_firestore.Utils.formatCurrency
 import com.example.quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components.ColorPickerRow
 import com.example.quanlythuchi_android_firestore.ui.Views.AddKhoanChi.components.EmojiRow
 import com.example.quanlythuchi_android_firestore.ui.components.CustomSnackbar
@@ -63,6 +72,9 @@ import com.example.quanlythuchi_android_firestore.ui.components.SnackbarType
 import com.example.quanlythuchi_android_firestore.ui.state.UiState
 import com.example.quanlythuchi_android_firestore.ui.theme.BackgroundColor
 import com.example.quanlythuchi_android_firestore.ui.theme.Dimens.PaddingBody
+import com.example.quanlythuchi_android_firestore.ui.theme.Dimens.PaddingXL
+import com.example.quanlythuchi_android_firestore.ui.theme.Dimens.RadiusFull
+import com.example.quanlythuchi_android_firestore.ui.theme.Dimens.RadiusXL
 import com.example.quanlythuchi_android_firestore.ui.theme.Dimens.SpaceMedium
 import kotlinx.coroutines.delay
 import java.util.Calendar
@@ -74,6 +86,8 @@ fun AddKhoanChiScreen(
     userId: String,
     khoanchiViewModel: KhoanChiViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
     var sotien by remember { mutableStateOf(0L) }
     var tenKhoanChiInput by remember { mutableStateOf("") }
     var selectedColor by remember { mutableStateOf("blue") }
@@ -113,9 +127,6 @@ fun AddKhoanChiScreen(
         }.timeInMillis
     }
 
-    Log.d("firstDayOfMonth", "firstDayOfMonth: $firstDayOfMonth")
-    Log.d("lastDayOfMonth", "lastDayOfMonth: $lastDayOfMonth")
-
 
     Scaffold(
         containerColor = BackgroundColor,
@@ -131,12 +142,11 @@ fun AddKhoanChiScreen(
     ) { innerPadding ->
         Box(
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(innerPadding).padding(horizontal = PaddingBody)
                 .fillMaxSize()
-                .padding(horizontal = PaddingBody)
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.padding(vertical = SpaceMedium),
                 verticalArrangement = Arrangement.spacedBy(SpaceMedium)
             ) {
                 // Nhập tên khoản chi
@@ -158,7 +168,7 @@ fun AddKhoanChiScreen(
                 )
 
                 // ✅ Hiển thị khoảng thời gian tự động
-                
+
 
                 // Nhập số tiền
                 CusTomTextField(
@@ -200,17 +210,17 @@ fun AddKhoanChiScreen(
                     icon = Icons.Default.AddCircle,
                     onClick = {
                         if (tenKhoanChiInput.isNotBlank() && sotien > 0) {
-//                            val khoanchinew = KhoanChiModel(
-//                                id = 0,
-//                                ten_khoanchi = tenKhoanChiInput,
-//                                id_nguoidung = userId,
-//                                mausac = selectedColor,
-//                                ngay_batdau = formatMillisToDB(firstDayOfMonth),
-//                                ngay_ketthuc = formatMillisToDB(lastDayOfMonth),
-//                                so_tien_du_kien = sotien,
-//                                emoji = emojiInput
-//                            )
-//                            khoanchiViewModel.createKhoanChi(khoanchinew)
+                            val khoanchinew = KhoanChiModel(
+                                id = "",
+                                ten_khoanchi = tenKhoanChiInput,
+                                id_nguoidung = userId,
+                                mausac = selectedColor,
+                                ngay_batdau = formatMillisToDB(firstDayOfMonth),
+                                ngay_ketthuc = formatMillisToDB(lastDayOfMonth),
+                                so_tien_du_kien = sotien,
+                                emoji = emojiInput
+                            )
+                            khoanchiViewModel.createKhoanChi(khoanchinew)
                         } else {
                             snackbarMessage = "Vui lòng nhập đầy đủ thông tin"
                             snackbarType = SnackbarType.ERROR
@@ -272,6 +282,7 @@ fun AddKhoanChiScreen(
                     else -> Unit
                 }
             }
+
         }
     }
 }

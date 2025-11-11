@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -105,7 +107,7 @@ fun HomeScreen(
 ) {
     //========================= STATES ==========================================
     val khoanChiState by khoanChiViewModel.loadtheothang.collectAsState()
-    val taiKhoanState by taiKhoanViewModel.loadtaikhoanState.collectAsState()
+    val taiKhoanState by taiKhoanViewModel.getAlltaikhoanState.collectAsState()
     val thuNhapState by thuNhapViewModel.getByThangVaNamState.collectAsState()
     val thuNhapTruocState by thuNhapViewModel.getByThangTruocState.collectAsState()
     val chiTieuState by chiTieuViewModel.getByThangVaNamState.collectAsState()
@@ -119,7 +121,7 @@ fun HomeScreen(
 
 //========================= TẢI DỮ LIỆU =====================================
     LaunchedEffect(userId) {
-        taiKhoanViewModel.loadTaiKhoans(userId)
+        taiKhoanViewModel.getAllTaiKhoanByUser(userId)
         nguoidungViewModel.getNguoiDungByID(userId)
         khoanChiViewModel.getKhoanChiTheThangVaNam(userId, currentMonth, currentYear)
 
@@ -147,40 +149,28 @@ fun HomeScreen(
     val chiTieuListTotal = ((chiTieuState as? UiState.Success)?.data ?: emptyList())
     val chiTieuTruocList = ((chiTieuTruocState as? UiState.Success)?.data ?: emptyList())
 
-    Log.d("chiTieuTruocList", "thuNhapTruocList: $thuNhapTruocList")
-    Log.d("chiTieuTruocList", "chiTieuTruocList: $chiTieuTruocList")
 
-
-// Lấy top 5 khoản chi có nhiều chi tiêu nhất
     val top5KhoanChi = khoanChiList
         .sortedByDescending { it.so_luong_chi_tieu }
         .take(5)
 
-// 5 thu nhập gần nhất
+
     val thuNhapList = thuNhapListTotal
         .sortedByDescending { it.ngay_tao }
         .take(5)
 
-// 5 chi tiêu gần nhất
     val chiTieuList = chiTieuListTotal
         .sortedByDescending { it.ngay_tao }
         .take(5)
 
-// Tính tổng tiền
     val tongThuNhap = thuNhapList.sumOf { it.so_tien!! }
     val tongChiTieu = chiTieuListTotal.sumOf { it.so_tien!! }
     val tongTienDuKien = khoanChiList.sumOf { it.so_tien_du_kien!! }
 
-    Log.d("tong thu nhap", tongThuNhap.toString())
-    Log.d("tong chi tieu", tongChiTieu.toString())
-
-// Tính dữ liệu biểu đồ
     val (data, dates) = tinhTongTheoTuanVaNgay(
         chiTieuListTotal + chiTieuTruocList,
         thuNhapListTotal + thuNhapTruocList
     )
-
-
 
     //========================= REFRESH =========================================
     var isRefreshing by remember { mutableStateOf(false) }
@@ -192,7 +182,7 @@ fun HomeScreen(
             coroutineScope.launch {
                 isRefreshing = true
                 khoanChiViewModel.getKhoanChiTheThangVaNam(userId, currentMonth, currentYear)
-                taiKhoanViewModel.loadTaiKhoans(userId)
+                taiKhoanViewModel.getAllTaiKhoanByUser(userId)
                 delay(500)
                 isRefreshing = false
             }
@@ -261,6 +251,22 @@ fun HomeScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
+
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Tháng ${currentMonth} năm ${currentYear}",
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Color.Black,
+                                fontSize = 16.sp,
+                            )
+                        }
+
+                    }
                     // Tổng quan tài khoản
                     item {
                         CardTaiKhoanRow(
@@ -272,7 +278,6 @@ fun HomeScreen(
                     }
 
 
-
                     item { FunctionRow(navController, userId) }
 
                     // Biểu đồ thống kê
@@ -282,7 +287,6 @@ fun HomeScreen(
                         }
                     }
 
-                    // Khoản chi
                     item {
                         if (khoanChiList.isEmpty()) {
                             CustomButton(
@@ -297,12 +301,10 @@ fun HomeScreen(
                         }
                     }
 
-                    // Thu nhập
                     if (thuNhapList.isNotEmpty()) {
                         item { HomeThuNhapColumn(navController,userId,thuNhapList) }
                     }
 
-                    // Chi tiêu
                     if (chiTieuList.isNotEmpty()) {
                         item { HomeChiTieuColumn(navController,userId,chiTieuList) }
                     }
@@ -330,97 +332,6 @@ fun HomeScreen(
         }
     }
 }
-
-
-//@Composable
-//fun HomeScreen(
-//    navController: NavController,
-//    userId: String,
-//    chiTieuViewModel: ChiTieuViewModel = hiltViewModel(),
-//    khoanChiViewModel: KhoanChiViewModel = hiltViewModel(),
-//    thuNhapViewModel: ThuNhapViewModel = hiltViewModel()
-//){
-//
-//    LaunchedEffect(Unit) {
-//        thuNhapViewModel.getThuNhapTheoThangVaNam("23", 11, 2025)
-//        thuNhapViewModel.thongKeTheoNam("23",2025)
-//    }
-//
-//    val thunhapstate by thuNhapViewModel.getByThangVaNamState.collectAsState()
-//    val thunhap by thuNhapViewModel.thongKeTheoNamState.collectAsState()
-//
-//    when(val statethunhap = thunhapstate) {
-//        is UiState.Success -> {
-//            Log.d("HomeScreen", "thu nhạp: ${statethunhap.data}")
-//        }
-//        is UiState.Error -> {
-//            Log.d("HomeScreen", "Error: ${statethunhap.message}")
-//        }
-//        else -> {
-//            DotLoading()
-//        }
-//    }
-//
-//    Scaffold(
-//
-//    ) { innerPadding ->
-//        Column(
-//            modifier = Modifier.padding(innerPadding).fillMaxSize(),
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//
-//
-//            Button(
-//                onClick = {
-//                    val thunhap = ThuNhapModel(
-//                        id = "123",
-//                        id_nguoidung = "23",
-//                        id_taikhoan = "123",
-//                        so_tien = 20000000,
-//                        ngay_tao = "2025-11-01",
-//                        ghi_chu = "Thu nhập"
-//                    )
-//
-//                    thuNhapViewModel.createThuNhap(thunhap)
-//                }
-//            ) {
-//                Text("Thêm")
-//            }
-//
-//            Button(
-//                onClick = {
-//                    val testKhoanChi = KhoanChiModel(
-//                        id = "zkS6nmXkMs9XcqzJjkfp",
-//                        ten_khoanchi = "Ăn uống",
-//                        id_nguoidung = "23",
-//                        so_tien_du_kien = 20000,
-//                        ngay_batdau = "2025-11-01",
-//                        ngay_ketthuc = "2025-11-30",
-//                        mausac = "#FF5733",
-//                        emoji = "🍔",
-//                        so_luong_chi_tieu = 0,
-//                        tong_tien_da_chi = 0
-//                    )
-//                    khoanChiViewModel.updateKhoanChi(testKhoanChi)
-//
-//                }
-//            ) {
-//                Text("Sửa")
-//            }
-//
-//            Button(
-//                onClick = {
-//                    thuNhapViewModel.deleteThuNhap(id = "byjUwk2dCzBqqwE9WDVw")
-//                }
-//            ) {
-//                Text("Xóa")
-//            }
-//        }
-//
-//    }
-//
-//}
 
 
 @Composable

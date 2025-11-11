@@ -19,10 +19,12 @@ class TaiKhoanViewModel @Inject constructor(
     private val repo: TaiKhoanRepository
 ) : ViewModel() {
 
-    private val _loadTaiKhoanState = MutableStateFlow<UiState<List<TaiKhoanModel>>>(UiState.Loading)
-    val loadtaikhoanState: StateFlow<UiState<List<TaiKhoanModel>>> = _loadTaiKhoanState
+    private val _getAllTaiKhoanState = MutableStateFlow<UiState<List<TaiKhoanModel>>>(UiState.Loading)
+    val getAlltaikhoanState: StateFlow<UiState<List<TaiKhoanModel>>> = _getAllTaiKhoanState
 
-    // State để theo dõi quá trình tạo tài khoản
+    private val _getTaiKhoanChinhState = MutableStateFlow<UiState<TaiKhoanModel>>(UiState.Loading)
+    val gettaikhoanChinhState: StateFlow<UiState<TaiKhoanModel>> = _getTaiKhoanChinhState
+
     private val _createTaiKhoanState = MutableStateFlow<UiState<BaseResponseMes<TaiKhoanModel>>>(UiState.Loading)
     val createTaiKhoanState: StateFlow<UiState<BaseResponseMes<TaiKhoanModel>>> = _createTaiKhoanState
 
@@ -34,17 +36,31 @@ class TaiKhoanViewModel @Inject constructor(
     private val _chuyentienTaiKhoanState = MutableStateFlow<UiState<StatusResponse>>(UiState.Loading)
     val chuyentienTaiKhoanState: StateFlow<UiState<StatusResponse>> = _chuyentienTaiKhoanState
 
-    fun loadTaiKhoans(userId: String) {
+    fun getAllTaiKhoanByUser(userId: String) {
         viewModelScope.launch {
-            _loadTaiKhoanState.value = UiState.Loading
+            _getAllTaiKhoanState.value = UiState.Loading
             try {
                 val result = repo.getTaiKhoanNguoiDung(userId)
-                _loadTaiKhoanState.value = UiState.Success(result)
+                _getAllTaiKhoanState.value = UiState.Success(result)
             } catch (e: Exception) {
-                _loadTaiKhoanState.value = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
+                _getAllTaiKhoanState.value = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
             }
         }
     }
+
+    fun getTaiKhoanChinh(userId: String) {
+        viewModelScope.launch {
+            _getTaiKhoanChinhState.value = UiState.Loading
+            try {
+                val result = repo.getTaiKhoanChinhNguoiDung(userId)
+                _getTaiKhoanChinhState.value = UiState.Success(result)
+            }catch (e: Exception){
+                _getTaiKhoanChinhState.value = UiState.Error(e.localizedMessage ?: "Lỗi không xác định")
+            }
+
+        }
+    }
+
 
     fun createTaiKhoan(taiKhoan: TaiKhoanModel) {
         viewModelScope.launch {
@@ -53,12 +69,17 @@ class TaiKhoanViewModel @Inject constructor(
                 val response = repo.createTaiKhoan(taiKhoan)
                 _createTaiKhoanState.value = UiState.Success(response)
                 // Sau khi tạo thành công, reload danh sách
-                loadTaiKhoans(taiKhoan.id_nguoidung)
+                getAllTaiKhoanByUser(taiKhoan.id_nguoidung)
             } catch (e: Exception) {
                 _createTaiKhoanState.value = UiState.Error(e.localizedMessage ?: "Không thể tạo tài khoản")
             }
         }
     }
+
+    fun resetCreateState() {
+        _createTaiKhoanState.value = UiState.Loading
+    }
+
 
     fun updateTaiKhoan(taiKhoan: TaiKhoanModel) {
         viewModelScope.launch {
@@ -67,23 +88,15 @@ class TaiKhoanViewModel @Inject constructor(
                 val response = repo.updateTaiKhoan(taiKhoan)
                 _updateTaiKhoanState.value = UiState.Success(response)
                 // Reload danh sách sau khi update thành công
-                loadTaiKhoans(taiKhoan.id_nguoidung)
+                getAllTaiKhoanByUser(taiKhoan.id_nguoidung)
             } catch (e: Exception) {
                 _updateTaiKhoanState.value = UiState.Error(e.localizedMessage ?: "Không thể update")
             }
         }
     }
 
-    fun chuyenTien(chuyenTienRequest: ChuyenTienRequest){
-        viewModelScope.launch {
-            _chuyentienTaiKhoanState.value = UiState.Loading
-            try {
-                val response = repo.chuyenTien(chuyenTienRequest)
-                _chuyentienTaiKhoanState.value = UiState.Success(response)
-            }catch (e: Exception){
-                _chuyentienTaiKhoanState.value = UiState.Error(e.localizedMessage ?: "Không thể chuyển tiền")
-            }
-        }
+    fun resetUpdateState() {
+        _updateTaiKhoanState.value = UiState.Loading
     }
 
     fun deleteTaiKhoan(id: String){
@@ -101,5 +114,23 @@ class TaiKhoanViewModel @Inject constructor(
             }
         }
     }
+
+    fun resetDeleteState() {
+        _deleteTaiKhoanState.value = UiState.Loading
+    }
+
+    fun chuyenTien(chuyenTienRequest: ChuyenTienRequest){
+        viewModelScope.launch {
+            _chuyentienTaiKhoanState.value = UiState.Loading
+            try {
+                val response = repo.chuyenTien(chuyenTienRequest)
+                _chuyentienTaiKhoanState.value = UiState.Success(response)
+            }catch (e: Exception){
+                _chuyentienTaiKhoanState.value = UiState.Error(e.localizedMessage ?: "Không thể chuyển tiền")
+            }
+        }
+    }
+
+
 
 }

@@ -105,7 +105,7 @@ fun CardTaikhoanPhu(
                         )
                         Text(
                             text = taikhoan.mo_ta,
-                            fontSize = 14.sp,
+                            fontSize = 16.sp,
                             color = Color.White.copy(alpha = 0.8f)
                         )
                     }
@@ -135,7 +135,7 @@ fun CardTaikhoanPhu(
             // Số dư
             Column {
                 Text(
-                    text = "Số dư khả dụng",
+                    text = "Số dư",
                     fontSize = 14.sp,
                     color = Color.White.copy(alpha = 0.7f)
                 )

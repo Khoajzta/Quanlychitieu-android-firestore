@@ -2,6 +2,7 @@ package com.example.quanlythuchi_android_firestore.ui.Views.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -12,9 +13,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -47,6 +50,11 @@ fun CardFunction(
 
     Box(
         modifier = modifier
+            .shadow(
+                elevation = 3.dp,
+                shape = RoundedCornerShape(RadiusFull),
+                clip = false
+            )
             .clip(RoundedCornerShape(RadiusFull))
             .background(
                 Brush.linearGradient(
@@ -55,8 +63,13 @@ fun CardFunction(
                     end = Offset(300f, 300f)
                 )
             )
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = androidx.compose.material3.ripple(
+                    color = Color.White.copy(alpha = 0.3f)
+                )
+            ) { onClick() }
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -121,8 +134,8 @@ fun FunctionRow(
             CardFunction(
                 title = "Thêm khoản chi",
                 gradientColors = listOf(
-                    Color(0xFF22C55E), // Xanh lá tươi (Material Success)
-                    Color(0xFFFFA726)  // Cam nhẹ (nổi bật)
+                    Color(0xFF3AA4AD), // Xanh lá tươi (Material Success)
+                    Color(0xFF23A47F)  // Cam nhẹ (nổi bật)
                 ),
                 iconPath = "file:///android_asset/icons/ic_add_khoan_chi.svg",
                 onClick = {

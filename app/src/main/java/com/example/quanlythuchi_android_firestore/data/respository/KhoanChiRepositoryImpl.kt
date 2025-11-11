@@ -45,9 +45,14 @@ class KhoanChiRepositoryImpl @Inject constructor(
         nam: Int
     ): List<KhoanChiModel> {
         return try {
+            val db = FirebaseFirestore.getInstance()
+            val khoanChiCollection = db.collection("khoanchi")
+            val chiTieuCollection = db.collection("chitieu")
+
             val (startOfMonthStr, endOfMonthStr) = getStartAndEndOfMonth(thang, nam)
 
-            val querySnapshot = collection
+            // Lấy danh sách khoản chi của user trong tháng đó
+            val khoanChiSnapshot = khoanChiCollection
                 .whereEqualTo("id_nguoidung", userId)
                 .whereGreaterThanOrEqualTo("ngay_batdau", startOfMonthStr)
                 .whereLessThanOrEqualTo("ngay_ketthuc", endOfMonthStr)
@@ -55,19 +60,57 @@ class KhoanChiRepositoryImpl @Inject constructor(
                 .await()
 
             Log.d(
-                "danh sách khoản chi tháng $thang/$nam của user $userId",
-                "✅ Tìm thấy ${querySnapshot.size()} documents trong tháng $thang/$nam"
+                "Firestore",
+                "✅ Tìm thấy ${khoanChiSnapshot.size()} khoản chi trong tháng $thang/$nam"
             )
 
-            querySnapshot.documents.mapNotNull { doc ->
-                doc.toObject(KhoanChiModel::class.java)
-            }
+            // Duyệt từng khoản chi để tính tổng tiền & số lượng chi tiêu
+            khoanChiSnapshot.documents.mapNotNull { doc ->
+                val khoanChi = doc.toObject(KhoanChiModel::class.java)?.copy(id = doc.id)
+                if (khoanChi != null) {
+                    // Lấy các chi tiêu thuộc khoản chi này
+                    val chiTieuSnapshot = chiTieuCollection
+                        .whereEqualTo("id_khoanchi", khoanChi.id)
+                        .get()
+                        .await()
 
+                    // Lọc chi tiêu trong đúng tháng/năm yêu cầu
+                    val chiTieuTrongThang = chiTieuSnapshot.documents.filter { chiTieuDoc ->
+                        val ngayTaoStr = chiTieuDoc.getString("ngay_tao") ?: return@filter false
+                        val (namChi, thangChi) = ngayTaoStr.split("-").map { it.toInt() }.let {
+                            it[0] to it[1]
+                        }
+                        namChi == nam && thangChi == thang
+                    }
+
+                    val tongTien = chiTieuTrongThang.sumOf {
+                        val soTien = it.get("so_tien")
+                        when (soTien) {
+                            is Long -> soTien
+                            is Double -> soTien.toLong()
+                            else -> 0L
+                        }
+                    }
+
+                    val soLuong = chiTieuTrongThang.size
+
+                    Log.d(
+                        "Firestore",
+                        "📊 Khoản chi '${khoanChi.ten_khoanchi}' có $soLuong chi tiêu, tổng $tongTien đ"
+                    )
+
+                    khoanChi.copy(
+                        so_luong_chi_tieu = soLuong,
+                        tong_tien_da_chi = tongTien
+                    )
+                } else null
+            }
         } catch (e: Exception) {
             Log.e("FirestoreQuery", "❌ Lỗi truy vấn: ${e.message}", e)
             emptyList()
         }
     }
+
 
 
 

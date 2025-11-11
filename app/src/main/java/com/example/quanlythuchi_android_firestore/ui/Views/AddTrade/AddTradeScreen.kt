@@ -38,11 +38,11 @@ fun AddTradeScreen(
 ) {
 
     val KhoanChiuiState by khoanChiViewModel.getAllByUserState.collectAsState()
-    val taiKhoanUiState by taiKhoanViewModel.loadtaikhoanState.collectAsState()
+    val taiKhoanUiState by taiKhoanViewModel.getAlltaikhoanState.collectAsState()
 
     LaunchedEffect(userId) {
         khoanChiViewModel.getAllKhoanChiByUser(userId)
-        taiKhoanViewModel.loadTaiKhoans(userId)
+        taiKhoanViewModel.getAllTaiKhoanByUser(userId)
         delay(15 * 60 * 1000L)
     }
 

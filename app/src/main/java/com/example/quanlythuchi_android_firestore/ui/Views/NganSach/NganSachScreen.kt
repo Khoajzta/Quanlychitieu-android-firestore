@@ -58,7 +58,7 @@ fun NganSachScreen(
     taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel()
 ) {
     // 📌 State từ ViewModel
-    val taikhoanUiState by taiKhoanViewModel.loadtaikhoanState.collectAsState()
+    val taikhoanUiState by taiKhoanViewModel.getAlltaikhoanState.collectAsState()
     val deleteTaiKhoanState by taiKhoanViewModel.deleteKhoanState.collectAsState()
     val updateTaiKhoanState by taiKhoanViewModel.updateTaiKhoanState.collectAsState()
 
@@ -71,13 +71,13 @@ fun NganSachScreen(
     val refreshState = rememberPullRefreshState(
         refreshing = taikhoanUiState is UiState.Loading,
         onRefresh = {
-            taiKhoanViewModel.loadTaiKhoans(userId)
+            taiKhoanViewModel.getAllTaiKhoanByUser(userId)
         }
     )
 
     // 📌 Load danh sách tài khoản khi vào màn hình
     LaunchedEffect(userId) {
-        taiKhoanViewModel.loadTaiKhoans(userId)
+        taiKhoanViewModel.getAllTaiKhoanByUser(userId)
     }
 
     // 📌 Lấy danh sách tài khoản
@@ -175,7 +175,7 @@ fun NganSachScreen(
                         CardTaiKhoanSwipeToDelete(
                             taikhoan = taiKhoan,
                             onDelete = {
-//                                taiKhoanViewModel.deleteTaiKhoan(it.id)
+                                taiKhoanViewModel.deleteTaiKhoan(it.id)
                             }
                         )
                     }

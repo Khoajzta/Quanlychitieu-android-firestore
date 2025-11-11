@@ -1,5 +1,6 @@
 package com.example.quanlythuchi_android_firestore.Views.AddTrade
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -30,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -58,9 +61,11 @@ import com.example.quanlythuchi_android_firestore.domain.model.KhoanChiModel
 import com.example.quanlythuchi_android_firestore.domain.model.TaiKhoanModel
 import com.example.quanlythuchi_android_firestore.domain.model.ThuNhapModel
 import com.example.quanlythuchi_android_firestore.ui.ViewModels.ChiTieuViewModel
+import com.example.quanlythuchi_android_firestore.ui.ViewModels.TaiKhoanViewModel
 import com.example.quanlythuchi_android_firestore.ui.ViewModels.ThuNhapViewModel
 import com.example.quanlythuchi_android_firestore.ui.components.CustomSnackbar
 import com.example.quanlythuchi_android_firestore.ui.components.SnackbarType
+import com.example.quanlythuchi_android_firestore.ui.state.UiState
 import com.example.quanlythuchi_android_firestore.ui.theme.Dimens.PaddingBody
 import com.example.quanlythuchi_android_firestore.ui.theme.Dimens.SpaceMedium
 import kotlinx.coroutines.delay
@@ -158,8 +163,12 @@ fun AddChiTieuPage(
     listKhoanChi: List<KhoanChiModel>,
     taikhoanchinh : TaiKhoanModel,
     userId : String,
-    chiTieuViewModel: ChiTieuViewModel = hiltViewModel()
+    chiTieuViewModel: ChiTieuViewModel = hiltViewModel(),
+    taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel()
 ) {
+    val createChiTieuState by chiTieuViewModel.createState.collectAsState()
+    val updateTaiKhoanState by taiKhoanViewModel.updateTaiKhoanState.collectAsState()
+
     var sotien by remember { mutableStateOf(0L) }
     var mota by remember { mutableStateOf("") }
     var selectedKhoanChi by remember { mutableStateOf(listKhoanChi.firstOrNull()) }
@@ -169,6 +178,20 @@ fun AddChiTieuPage(
     var snackbarVisible by remember { mutableStateOf(false) }
     var snackbarType by remember { mutableStateOf(SnackbarType.SUCCESS) }
     var snackbarMessage by remember { mutableStateOf("") }
+
+    LaunchedEffect(createChiTieuState, updateTaiKhoanState) {
+        val isCreateSuccess = createChiTieuState is UiState.Success
+        val isUpdateSuccess = updateTaiKhoanState is UiState.Success
+
+        if (isCreateSuccess && isUpdateSuccess) {
+            snackbarType = SnackbarType.SUCCESS
+            snackbarMessage = "Thêm chi tiêu thành công!"
+            snackbarVisible = true
+
+            chiTieuViewModel.resetCreateState()
+            taiKhoanViewModel.resetUpdateState()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -258,12 +281,9 @@ fun AddChiTieuPage(
                             ghi_chu = mota
                         )
                         chiTieuViewModel.createChiTieu(chiTieu)
-
-                        snackbarType = SnackbarType.SUCCESS
-                        snackbarMessage = "Thêm chi tiêu thành công"
+                        taiKhoanViewModel.updateTaiKhoan(taikhoanchinh.copy(so_du = taikhoanchinh.so_du- sotien))
                         snackbarVisible = true
 
-                        // reset form nếu muốn
                         sotien = 0
                         mota = ""
                         selectedDate = null
@@ -312,22 +332,34 @@ fun AddChiTieuPage(
 fun AddThuNhapPage(
     navController: NavController,
     userId: String,
-    taikhoanchinh : TaiKhoanModel,
-    thuNhapViewModel: ThuNhapViewModel = hiltViewModel()
+    taikhoanchinh: TaiKhoanModel,
+    thuNhapViewModel: ThuNhapViewModel = hiltViewModel(),
+    taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel()
 ) {
+
+    val context = LocalContext.current
+
+    val createThuNhapState by thuNhapViewModel.createState.collectAsState()
+    val updateTaiKhoanState by taiKhoanViewModel.updateTaiKhoanState.collectAsState()
+
     var tenThuNhap by remember { mutableStateOf("") }
     var sotien by remember { mutableStateOf(0L) }
     var selectedDate by remember { mutableStateOf<Long?>(null) }
 
-    var snackbarVisible by remember { mutableStateOf(false) }
-    var snackbarType by remember { mutableStateOf(SnackbarType.SUCCESS) }
-    var snackbarMessage by remember { mutableStateOf("") }
+    LaunchedEffect(createThuNhapState) {
+        if (createThuNhapState is UiState.Success) {
+            Toast.makeText(context, "Thêm thu nhập thành công", Toast.LENGTH_SHORT).show()
+
+            thuNhapViewModel.resetCreateState()
+            taiKhoanViewModel.resetUpdateState()
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = PaddingBody)
-    ){
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(SpaceMedium)
@@ -335,14 +367,12 @@ fun AddThuNhapPage(
             CusTomTextField(
                 value = tenThuNhap,
                 onValueChange = { tenThuNhap = it },
-                leadingIcon = {
-                    Text(
-                        text = "📝",
-                        fontSize = 20.sp
-                    )
-                },
+                leadingIcon = { Text(text = "📝", fontSize = 20.sp) },
                 placeholder = "Tên thu nhập",
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -350,14 +380,9 @@ fun AddThuNhapPage(
                 value = if (sotien == 0L) "" else formatCurrency(sotien),
                 onValueChange = { newValue ->
                     val digits = newValue.filter { it.isDigit() }
-                    sotien = if (digits.isNotEmpty()) digits.toLong() else 0L
+                    sotien = digits.toLongOrNull() ?: 0L
                 },
-                leadingIcon = {
-                    Text(
-                        text = "💵",
-                        fontSize = 20.sp,
-                    )
-                },
+                leadingIcon = { Text(text = "💵", fontSize = 20.sp) },
                 placeholder = "Số tiền",
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -373,13 +398,12 @@ fun AddThuNhapPage(
             )
 
             CustomButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 title = "Thêm thu nhập",
                 icon = Icons.Default.AddCircle,
                 onClick = {
-                    if(tenThuNhap != "" && sotien != 0L && selectedDate != null ){
-                        var thuNhap = ThuNhapModel(
+                    if (tenThuNhap.isNotEmpty() && sotien > 0 && selectedDate != null) {
+                        val thuNhap = ThuNhapModel(
                             id = "",
                             id_nguoidung = userId,
                             id_taikhoan = taikhoanchinh.id,
@@ -388,47 +412,28 @@ fun AddThuNhapPage(
                             ghi_chu = tenThuNhap
                         )
 
-
                         thuNhapViewModel.createThuNhap(thuNhap)
+                        taiKhoanViewModel.updateTaiKhoan(
+                            taikhoanchinh.copy(so_du = taikhoanchinh.so_du + sotien)
+                        )
 
-                        snackbarType = SnackbarType.SUCCESS
-                        snackbarMessage = "Thêm thu nhập thành công"
-                        snackbarVisible = true
-                    }else{
-                        snackbarType = SnackbarType.ERROR
-                        snackbarMessage = "Vui lòng nhập đây đủ thông tin"
-                        snackbarVisible = true
+                        // Reset form
+                        tenThuNhap = ""
+                        sotien = 0
+                        selectedDate = null
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Vui lòng nhập đầy đủ thông tin",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                },
+                }
             )
-        }
-
-        // Hiển thị Snackbar ở cuối màn hình
-        AnimatedVisibility(
-            visible = snackbarVisible,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp),
-            enter = slideInVertically { it } + fadeIn(),
-            exit = slideOutVertically { it } + fadeOut()
-        ) {
-            CustomSnackbar(
-                modifier = Modifier.fillMaxWidth(),
-                message = snackbarMessage,
-                type = snackbarType
-            )
-        }
-
-        LaunchedEffect(snackbarVisible) {
-            if (snackbarVisible) {
-                delay(1500)
-                navController.popBackStack()
-                snackbarVisible = false
-            }
         }
     }
-
 }
+
 
 @Composable
 @Preview

@@ -60,7 +60,7 @@ fun ChuyenTienScreen(
     taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel()
 ){
 
-    val taikhoanUiState by taiKhoanViewModel.loadtaikhoanState.collectAsState()
+    val taikhoanUiState by taiKhoanViewModel.getAlltaikhoanState.collectAsState()
     val chuyenTienState by taiKhoanViewModel.chuyentienTaiKhoanState.collectAsState()
 
     var snackbarVisible by remember { mutableStateOf(false) }
@@ -68,7 +68,7 @@ fun ChuyenTienScreen(
     var snackbarMessage by remember { mutableStateOf("") }
 
     LaunchedEffect(userId) {
-        taiKhoanViewModel.loadTaiKhoans(userId)
+        taiKhoanViewModel.getAllTaiKhoanByUser(userId)
     }
 
     LaunchedEffect(chuyenTienState) {
@@ -219,7 +219,7 @@ fun ChuyenTienScreen(
                                     )
 
                                     taiKhoanViewModel.chuyenTien(chuyenTienRequest)
-                                    taiKhoanViewModel.loadTaiKhoans(userId)
+                                    taiKhoanViewModel.getAllTaiKhoanByUser(userId)
 
                                     snackbarType = SnackbarType.SUCCESS
                                     snackbarMessage = "Chuyển tiền thành công"

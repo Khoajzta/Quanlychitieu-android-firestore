@@ -7,6 +7,7 @@ import com.example.quanlythuchi_android_firestore.domain.model.TaiKhoanModel
 
 interface TaiKhoanRepository {
     suspend fun getTaiKhoanNguoiDung(userId: String) : List<TaiKhoanModel>
+    suspend fun getTaiKhoanChinhNguoiDung(userId: String) : TaiKhoanModel
     suspend fun createTaiKhoan(taikhoan: TaiKhoanModel): BaseResponseMes<TaiKhoanModel>
     suspend fun updateTaiKhoan(taikhoan: TaiKhoanModel): StatusResponse
     suspend fun chuyenTien(chuyenTienRequest: ChuyenTienRequest) : StatusResponse

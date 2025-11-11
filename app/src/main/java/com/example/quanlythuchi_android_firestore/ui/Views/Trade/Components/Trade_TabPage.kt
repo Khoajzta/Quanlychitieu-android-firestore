@@ -49,6 +49,7 @@ import com.example.quanlythuchi_android_firestore.Components.CardThuNhapSwipeToD
 import com.example.quanlythuchi_android_firestore.Components.DotLoading
 import com.example.quanlythuchi_android_firestore.domain.model.KhoanChiModel
 import com.example.quanlythuchi_android_firestore.domain.model.ThuNhapModel
+import com.example.quanlythuchi_android_firestore.ui.ViewModels.TaiKhoanViewModel
 import com.example.quanlythuchi_android_firestore.ui.ViewModels.ThuNhapViewModel
 import com.example.quanlythuchi_android_firestore.ui.components.CustomSnackbar
 import com.example.quanlythuchi_android_firestore.ui.components.SnackbarType
@@ -192,11 +193,16 @@ fun ChiTieuPage(
 @Composable
 fun ThuNhapPage(
     userId: String,
-    thuNhapViewModel: ThuNhapViewModel = hiltViewModel()
+    thuNhapViewModel: ThuNhapViewModel = hiltViewModel(),
+    taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel()
 ) {
     val thuNhapState by thuNhapViewModel.getByThangVaNamState.collectAsState()
 
     val deleteThuNhapState by thuNhapViewModel.deleteState.collectAsState()
+    val updateTaiKhoanState by taiKhoanViewModel.updateTaiKhoanState.collectAsState()
+    val getTaiKhoanChinhState by taiKhoanViewModel.gettaikhoanChinhState.collectAsState()
+
+    val taiKhoanChinh = (getTaiKhoanChinhState as? UiState.Success)?.data
 
     val currentDate = LocalDate.now()
     val currentMonth = currentDate.monthValue
@@ -209,19 +215,23 @@ fun ThuNhapPage(
     // Tải danh sách thu nhập ban đầu
     LaunchedEffect(userId) {
         thuNhapViewModel.getThuNhapTheoThangVaNam(
-            userId = userId.toString(), thang = currentMonth, nam = currentYear
+            userId = userId, thang = currentMonth, nam = currentYear
         )
+        taiKhoanViewModel.getTaiKhoanChinh(userId)
     }
 
-    // Khi xóa thành công -> load lại danh sách
-    LaunchedEffect(deleteThuNhapState) {
-        if (deleteThuNhapState is UiState.Success) {
-            thuNhapViewModel.getThuNhapTheoThangVaNam(
-                userId = userId.toString(), thang = currentMonth, nam = currentYear
-            )
-
+    LaunchedEffect(deleteThuNhapState , updateTaiKhoanState) {
+        if (deleteThuNhapState is UiState.Success && updateTaiKhoanState is UiState.Success) {
             snackbarType = SnackbarType.SUCCESS
             snackbarMessage = "Xóa thu nhập thành công"
+            snackbarVisible = true
+
+            thuNhapViewModel.getThuNhapTheoThangVaNam(userId, currentMonth,currentYear)
+            taiKhoanViewModel.resetUpdateState()
+            thuNhapViewModel.resetDeleteState()
+        } else if (deleteThuNhapState is UiState.Error) {
+            snackbarType = SnackbarType.ERROR
+            snackbarMessage = "Xóa thu nhập thất bại"
             snackbarVisible = true
         }
     }
@@ -256,6 +266,7 @@ fun ThuNhapPage(
                                 thuNhap = item,
                                 onDelete = { thuNhap ->
                                     thuNhapViewModel.deleteThuNhap(thuNhap.id!!)
+                                    taiKhoanViewModel.updateTaiKhoan(taiKhoanChinh!!.copy(so_du = taiKhoanChinh.so_du - thuNhap.so_tien!!))
                                 }
                             )
                         }

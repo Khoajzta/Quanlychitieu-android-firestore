@@ -99,7 +99,7 @@ fun CardTaiKhoanChinh(
                 CustomButton(
                     title = "Hủy",
                     onClick = { showDialog = false },
-                    containerColor = Color.Red
+                    gradientColors = listOf(Color.Red, Color.Red)
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 CustomButton(
@@ -214,7 +214,7 @@ fun CardTaiKhoanChinh(
                 CustomButton(
                     title = "Nạp tiền",
                     onClick = { showDialog = true},
-                    containerColor = Color(0xFF1C94D5),
+                    gradientColors = listOf(Color(0xFF2B81C7), Color(0xFF3FDECF)),
                     icon = Icons.Default.Add
                 )
 

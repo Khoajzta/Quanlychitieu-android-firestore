@@ -49,6 +49,7 @@ class NguoiDungViewModel @Inject constructor(
     private val _getByIdState = MutableStateFlow<UiState<NguoiDungModel>>(UiState.Loading)
     val getByIdState: StateFlow<UiState<NguoiDungModel>> = _getByIdState
 
+
     // 🌀 Trạng thái loading toàn cục
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -130,6 +131,8 @@ class NguoiDungViewModel @Inject constructor(
         viewModelScope.launch {
             setLoading(true)
             try {
+
+
                 val checkResult = repository.checkEmailNguoidung(nguoiDung.email!!)
 
                 if (checkResult.exists) {
@@ -167,6 +170,7 @@ class NguoiDungViewModel @Inject constructor(
                     onSuccess(id)
                 }
             } catch (e: Exception) {
+
                 onError(e.message ?: "Lỗi không xác định")
             } finally {
                 setLoading(false)

@@ -41,6 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.quanlythuchi_android_firestore.Components.DotLoading
 import com.example.quanlythuchi_android_firestore.ui.ViewModels.ChiTieuViewModel
+import com.example.quanlythuchi_android_firestore.ui.ViewModels.TaiKhoanViewModel
 import com.example.quanlythuchi_android_firestore.ui.components.CardChiTieuSwipeToDelete
 import com.example.quanlythuchi_android_firestore.ui.components.CustomSnackbar
 import com.example.quanlythuchi_android_firestore.ui.components.Header
@@ -55,7 +56,8 @@ fun KhoanChiDetailScreen(
     navController: NavHostController,
     id_khoanChi: String,
     userId: String,
-    chiTieuViewModel: ChiTieuViewModel = hiltViewModel()
+    chiTieuViewModel: ChiTieuViewModel = hiltViewModel(),
+    taiKhoanViewModel: TaiKhoanViewModel = hiltViewModel()
 ) {
     val chiTieuState by chiTieuViewModel.uiState.collectAsState()
     var isRefreshing by remember { mutableStateOf(false) }
@@ -65,14 +67,24 @@ fun KhoanChiDetailScreen(
     var snackbarMessage by remember { mutableStateOf("") }
 
     val deleteChiTieuState by chiTieuViewModel.deleteState.collectAsState()
+    val updateTaiKhoanState by taiKhoanViewModel.updateTaiKhoanState.collectAsState()
+    val getTaiKhoanChinhState by taiKhoanViewModel.gettaikhoanChinhState.collectAsState()
 
-    LaunchedEffect(deleteChiTieuState) {
-        if (deleteChiTieuState is UiState.Success) {
+    LaunchedEffect(userId) {
+        taiKhoanViewModel.getTaiKhoanChinh(userId)
+    }
+
+    val taiKhoanChinh = (getTaiKhoanChinhState as? UiState.Success)?.data
+
+    LaunchedEffect(deleteChiTieuState , updateTaiKhoanState) {
+        if (deleteChiTieuState is UiState.Success && updateTaiKhoanState is UiState.Success) {
             snackbarType = SnackbarType.SUCCESS
             snackbarMessage = "Xóa chi tiêu thành công"
             snackbarVisible = true
 
             chiTieuViewModel.getChiTieuTheoKhoanChiCuaNguoiDung(id_khoanChi, userId)
+            taiKhoanViewModel.resetUpdateState()
+            chiTieuViewModel.resetDeleteState()
         } else if (deleteChiTieuState is UiState.Error) {
             snackbarType = SnackbarType.ERROR
             snackbarMessage = "Xóa chi tiêu thất bại"
@@ -148,6 +160,7 @@ fun KhoanChiDetailScreen(
                                     chitieu = chiTieu,
                                     onDelete = { deletedItem ->
                                         chiTieuViewModel.deleteChiTieu(deletedItem.id!!)
+                                        taiKhoanViewModel.updateTaiKhoan(taiKhoanChinh!!.copy(so_du = taiKhoanChinh.so_du + chiTieu.so_tien!!))
                                     }
                                 )
                             }

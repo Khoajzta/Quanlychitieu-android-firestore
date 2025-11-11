@@ -67,6 +67,9 @@ class ChiTieuViewModel @Inject constructor(
         }
     }
 
+    fun resetCreateState() {
+        _createState.value = UiState.Loading
+    }
 
     fun updateChiTieu(chitieu: ChiTieuModel) {
         viewModelScope.launch {
@@ -87,7 +90,10 @@ class ChiTieuViewModel @Inject constructor(
         }
     }
 
-    // 🔴 Xóa chi tiêu
+    fun resetUpdateState() {
+        _updateState.value = UiState.Loading
+    }
+
     fun deleteChiTieu(id: String) {
         viewModelScope.launch {
             _deleteState.value = UiState.Loading
@@ -105,8 +111,10 @@ class ChiTieuViewModel @Inject constructor(
         }
     }
 
+    fun resetDeleteState() {
+        _deleteState.value = UiState.Loading
+    }
 
-    // 🟡 Lấy chi tiêu theo khoản chi và người dùng
     fun getChiTieuTheoKhoanChiCuaNguoiDung(idKhoanChi: String, userId: String) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
@@ -125,7 +133,6 @@ class ChiTieuViewModel @Inject constructor(
     }
 
 
-    // 🔵 Lấy chi tiêu theo tháng và năm
     fun getChiTieuTheoThangVaNam(userId: String, thang: Int, nam: Int) {
         viewModelScope.launch {
             _getByThangVaNamState.value = UiState.Loading
@@ -158,7 +165,6 @@ class ChiTieuViewModel @Inject constructor(
         }
     }
 
-    // 🟣 Thống kê theo năm
     fun thongKeTheoNam(userId: String, nam: Int) {
         viewModelScope.launch {
             _thongKeState.value = UiState.Loading

@@ -33,7 +33,6 @@ class ThuNhapViewModel @Inject constructor(
     private val _getByThangTruocState = MutableStateFlow<UiState<List<ThuNhapModel>>>(UiState.Loading)
     val getByThangTruocState: StateFlow<UiState<List<ThuNhapModel>>> = _getByThangTruocState
 
-
     private val _thongKeTheoNamState = MutableStateFlow<UiState<List<ThongKeThuNhapModel>>>(UiState.Loading)
     val thongKeTheoNamState: StateFlow<UiState<List<ThongKeThuNhapModel>>> = _thongKeTheoNamState
     private val _createState = MutableStateFlow<UiState<StatusResponse>>(UiState.Loading)
@@ -95,6 +94,11 @@ class ThuNhapViewModel @Inject constructor(
         }
     }
 
+    fun resetCreateState() {
+        _createState.value = UiState.Loading
+    }
+
+
     fun deleteThuNhap(id: String) {
         viewModelScope.launch {
             _deleteState.value = UiState.Loading
@@ -109,6 +113,10 @@ class ThuNhapViewModel @Inject constructor(
                 _deleteState.value = UiState.Error(e.message ?: "Lỗi không xác định")
             }
         }
+    }
+
+    fun resetDeleteState() {
+        _deleteState.value = UiState.Loading
     }
 }
 
